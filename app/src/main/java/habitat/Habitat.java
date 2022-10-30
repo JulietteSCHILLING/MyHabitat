@@ -33,14 +33,14 @@ public class Habitat implements Parcelable {
     };
 
     public void createHabitat(){
-        Piece piece1 = new Piece(this);
+        Piece piece1 = new Piece("p1", this);
         Mur murN = new Mur(piece1, Orientation.NORD, this);
         Mur murE = new Mur(piece1, Orientation.EST, this);
         Mur murS = new Mur(piece1, Orientation.SUD, this);
         Mur murO = new Mur(piece1, Orientation.OUEST, this);
         piece1.setMurs(murS, murO, murN, murE);
         pieces.add(piece1);
-        Piece piece2 = new Piece(this);
+        Piece piece2 = new Piece("p2", this);
         murN = new Mur(piece1, Orientation.NORD, this);
         murE = new Mur(piece1, Orientation.EST, this);
         murS = new Mur(piece1, Orientation.SUD, this);

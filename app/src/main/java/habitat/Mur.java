@@ -22,8 +22,6 @@ public class Mur implements Parcelable {
     }
 
     protected Mur(Parcel in) {
-        //piece = in.readParcelable(Piece.class.getClassLoader());
-        //in.readParcelable(Piece.class.getClassLoader());
         orientation = (Orientation) in.readSerializable();
     }
 
@@ -55,6 +53,14 @@ public class Mur implements Parcelable {
         this.orientation = orientation;
     }
 
+    public Habitat getHabitat() {
+        return habitat;
+    }
+
+    public void setHabitat(Habitat habitat) {
+        this.habitat = habitat;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -70,6 +76,8 @@ public class Mur implements Parcelable {
                 '}';
 
          */
+
+
     }
 
     @Override

@@ -33,7 +33,7 @@ public class PiecesActivity extends AppCompatActivity {
     }
 
     public void addPiece(View view) {
-        Piece piece1 = new Piece(habitat);
+        Piece piece1 = new Piece("p", habitat);
         Mur murN = new Mur(piece1, Orientation.NORD, habitat);
         Mur murE = new Mur(piece1, Orientation.EST, habitat);
         Mur murS = new Mur(piece1, Orientation.SUD, habitat);

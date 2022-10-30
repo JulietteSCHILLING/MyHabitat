@@ -2,22 +2,23 @@ package habitat;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Piece implements Parcelable {
     private Habitat habitat;
+    private String nom;
     private ArrayList<Mur> murs;
 
-    public Piece(Habitat habitat) {
+    public Piece(String nom, Habitat habitat) {
+        this.nom = nom;
         this.habitat = habitat;
         murs = new ArrayList<>(4);
     }
 
     protected Piece(Parcel in) {
         habitat = new Habitat();
+        nom = new String();
+        nom = in.readString();
         murs = new ArrayList<Mur>(4);
         in.readList(murs, Mur.class.getClassLoader());
     }
@@ -33,6 +34,14 @@ public class Piece implements Parcelable {
             return new Piece[size];
         }
     };
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     public ArrayList<Mur> getMurs() {
         return murs;
@@ -54,8 +63,8 @@ public class Piece implements Parcelable {
 
     @Override
     public String toString() {
-        return "Piece{" +
-                "murs=" + murs.toString() +
+        return "Piece{nom=" + nom +
+                ", murs=" + murs.toString() +
                 '}';
     }
 
@@ -66,13 +75,14 @@ public class Piece implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nom);
         dest.writeList(murs);
     }
 
     public void setCorrectly() {
         for(Mur mur : murs){
             mur.setPiece(this);
-
+            mur.setHabitat(habitat);
         }
     }
 }
