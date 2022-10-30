@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myhabitat" >
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="true"/>
 
     <application
         android:allowBackup="true"
