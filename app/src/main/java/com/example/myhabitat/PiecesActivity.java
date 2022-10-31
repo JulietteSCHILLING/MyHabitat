@@ -2,6 +2,7 @@ package com.example.myhabitat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,13 +17,18 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.*;
+import outils.GestionnaireEditHabitat;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class PiecesActivity extends AppCompatActivity {
     private Habitat habitat;
-    private TextView textView;
     private GestionnaireEditHabitat gestionnaire;
     private ActivityResultLauncher<Intent> launcher;
-    private ImageButton photoEnCours;
+    private ImageButton photoEnCours;  //Detecte à quel mur associer la photo en cours
 
 
     @Override
@@ -59,28 +65,24 @@ public class PiecesActivity extends AppCompatActivity {
                             Bitmap photoBitmap = (Bitmap) extras.get("data");
 
                             //On vérifie que la photo a bien été prise
-                            //Toast.makeText(PiecesActivity.this, "hauteur de l'image : " + photoBitmap.getHeight(), Toast.LENGTH_SHORT);
                             Log.i("testPhotoBitmap", "hauteur de l'image : " + photoBitmap.getHeight());
 
-                            gestionnaire.getMur(photoEnCours).setPhoto(photoBitmap);
-                            affichePieces();
-
-                            /*
-                            //On enregistre la photo
-                            FileOutputStream fos = null;
-                            try {
-                                fos = openFileOutput("image.data", MODE_PRIVATE);
-                                photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                                fos.flush();
-                                Log.i("MainActivity", "La photo a bien été enregistrée");
-                            } catch (FileNotFoundException e) {
-                                throw new RuntimeException(e);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                            Mur murAssocie = gestionnaire.getMur(photoEnCours);
+                            if(murAssocie != null){
+                                //On enregistre la photo
+                                FileOutputStream fos = null;
+                                try {
+                                    fos = openFileOutput(murAssocie.getId()+".data", MODE_PRIVATE);
+                                    photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                    fos.flush();
+                                    Log.i("enregistrementPhoto", "La photo " + murAssocie.getId()+".data a bien été enregistrée");
+                                } catch (FileNotFoundException e) {
+                                    throw new RuntimeException(e);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
-
-                             */
-
+                            affichePieces();
                         }
 
                     }
@@ -126,7 +128,22 @@ public class PiecesActivity extends AppCompatActivity {
                 ImageButton imageButton = new ImageButton(this);
                 imageButton.setMaxHeight(50);
                 imageButton.setMaxWidth(50);
-                imageButton.setImageBitmap(mur.getPhoto());
+                //imageButton.setImageBitmap(mur.getPhoto());
+
+                //On récupère la photo
+                FileInputStream fis = null;
+                try {
+                    fis = openFileInput(mur.getId()+".data");
+                } catch (FileNotFoundException e) {
+                    //throw new RuntimeException(e);
+                }
+                if (fis != null) {
+                    Bitmap bm = BitmapFactory.decodeStream(fis);
+
+                    imageButton.setImageBitmap(bm);
+                }
+
+
                 gestionnaire.addEditMur(imageButton, mur);
                 imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -3,38 +3,32 @@ package habitat;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import outils.FabriqueId;
 
 public class Mur implements Parcelable {
 
     private Habitat habitat;
     private Piece piece;
     private Orientation orientation;
-    private Bitmap photo;
-
-    public Bitmap getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Bitmap photo) {
-        this.photo = photo;
-    }
+    private int id; //Utile pour stocker la photo associée au mur
 
     public Mur(Piece piece, Habitat habitat) {
         this.habitat = habitat;
         this.piece = piece;
         this.orientation = Orientation.SUD;  //Par défaut
-        photo = null;
+        id = FabriqueId.getInstance().getId();
     }
 
     public Mur(Piece piece, Orientation orientation, Habitat habitat) {
         this.habitat = habitat;
         this.piece = piece;
         this.orientation = orientation;
+        id = FabriqueId.getInstance().getId();
     }
 
     protected Mur(Parcel in) {
         orientation = (Orientation) in.readSerializable();
-        photo = in.readParcelable(Bitmap.class.getClassLoader());
+        id = in.readInt();
     }
 
     public static final Creator<Mur> CREATOR = new Creator<Mur>() {
@@ -73,6 +67,14 @@ public class Mur implements Parcelable {
         this.habitat = habitat;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -100,6 +102,6 @@ public class Mur implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(orientation);
-        dest.writeParcelable(photo, flags);
+        dest.writeInt(id);
     }
 }

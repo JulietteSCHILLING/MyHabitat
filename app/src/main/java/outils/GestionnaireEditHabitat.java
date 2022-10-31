@@ -1,7 +1,9 @@
-package habitat;
+package outils;
 
 import android.widget.EditText;
 import android.widget.ImageButton;
+import habitat.Mur;
+import habitat.Piece;
 
 import java.util.HashMap;
 
