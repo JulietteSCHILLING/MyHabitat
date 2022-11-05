@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class PiecesActivity extends AppCompatActivity {
+public class ModeConceptionActivity extends AppCompatActivity {
     private Habitat habitat;
     private GestionnaireEditHabitat gestionnaire;
     private ActivityResultLauncher<Intent> launcher;
@@ -34,7 +34,7 @@ public class PiecesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pieces);
+        setContentView(R.layout.activity_mode_conception);
 
         gestionnaire = new GestionnaireEditHabitat();
 

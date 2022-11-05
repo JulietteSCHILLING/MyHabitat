@@ -1,8 +1,6 @@
 package com.example.myhabitat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -60,10 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void AffichePieces(View view) {
-        Intent intent = new Intent(this, PiecesActivity.class);
+    public void conception(View view) {
+        Intent intent = new Intent(this, ModeConceptionActivity.class);
         intent.putExtra("Habitat", habitat);
-        //startActivity(intent);
+        if (intent.resolveActivity(getPackageManager()) != null){
+            launcher.launch(intent);
+        }
+    }
+
+    public void immersion(View view) {
+        Intent intent = new Intent(this, ModeImmersionActivity.class);
+        intent.putExtra("Habitat", habitat);
         if (intent.resolveActivity(getPackageManager()) != null){
             launcher.launch(intent);
         }
@@ -86,7 +91,11 @@ public class MainActivity extends AppCompatActivity {
                 murs.put(Jmur);
             }
             pieces.put(piece.getNom());
-            pieces.put(murs);
+            try {
+                pieces.put(0, murs);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
         try {
             enregistrement.put("Pieces", pieces);
@@ -103,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 ps.close();
                 fos.flush();
                 Log.i("testEnregistrement", "enregistrement.json a bien été enregistré");
+                ouvrirJSON();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -110,27 +120,40 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.i("testJSON", enregistrement.toString());
 
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput("enregistrement.json");
-            } catch (FileNotFoundException e) {
-                //throw new RuntimeException(e);
-            }
-            if (fis != null) {
-                String json = getFileContent(fis);
-
-                Log.i("testJSON", json);
-            }
-
-
         }else{
             Log.i("testJSON", "pbm");
         }
     }
 
-    public String getFileContent( FileInputStream fis ) {
+    public void ouvrirJSON(){
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("enregistrement.json");
+        } catch (FileNotFoundException e) {
+            //throw new RuntimeException(e);
+        }
+        if (fis != null) {
+            String json = getFileContent(fis);
+
+            try {
+                JSONObject enregistrement = new JSONObject(json);
+                JSONArray pieces = enregistrement.getJSONArray("Pieces");
+                JSONArray murs = pieces.getJSONArray(0);
+                Log.i("testJSONmurs", murs.toString());
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            Log.i("testJSON", json);
+        }else{
+            Log.i("testJSON", "pbm ouverture");
+        }
+    }
+
+    public String getFileContent(FileInputStream fis) {
         StringBuilder sb = new StringBuilder();
-        Reader r = null;  //or whatever encoding
+        Reader r = null;
         try {
             r = new InputStreamReader(fis, "UTF-8");
             int ch = r.read();
@@ -148,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.i("testOn", "on y est !");
         enregistrement();
         super.onPause();
     }
