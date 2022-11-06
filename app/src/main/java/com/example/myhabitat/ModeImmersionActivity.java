@@ -33,7 +33,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     Piece pieceEnCours;
     private SensorManager sensorManager;
     private ImageView imageViewBoussole;
-    private float debut = 0f;
+    private float debut = 0;
     private ImageView imageViewMur;
 
     @Override
@@ -121,26 +121,6 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         }
     }
 
-    public void afficheSud(View view){
-        murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
-        afficheMur();
-    }
-
-    public void afficheNord(View view){
-        murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
-        afficheMur();
-    }
-
-    public void afficheEst(View view){
-        murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
-        afficheMur();
-    }
-
-    public void afficheOuest(View view){
-        murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
-        afficheMur();
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         // On récupère l'angle
@@ -155,35 +135,34 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         if(imageViewBoussole == null) {
             imageViewBoussole = findViewById(R.id.imageViewBoussole);
         }
-        imageViewBoussole.startAnimation(rotateAnimation);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imageViewBoussole.startAnimation(rotateAnimation);
 
 
-        if(angle<(-45) && angle>=(-135)){
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
-        } else if (angle<(-135) && angle>=(-225)) {
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
-        } else if (angle<(-225) && angle>=(-315)) {
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
-        }else{
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
-        }
-        afficheMur();
-        Toast.makeText(getBaseContext(), murEnCours.getOrientation().toString(), Toast.LENGTH_SHORT).show();
-
+                if(angle<(-45) && angle>=(-135)){
+                    murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
+                } else if (angle<(-135) && angle>=(-225)) {
+                    murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
+                } else if (angle<(-225) && angle>=(-315)) {
+                    murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
+                }else{
+                    murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
+                }
+                afficheMur();
+            }
+        });
 
         //Maj de l'angle de depart
         debut = angle;
 
-        Log.i("testRotationBoussole", "rotation = " + angle);
-
-        /*
         try {
-            Thread.sleep(200);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-         */
     }
 
     @Override

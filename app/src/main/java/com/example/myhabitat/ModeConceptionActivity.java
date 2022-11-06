@@ -152,8 +152,14 @@ public class ModeConceptionActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                TextView textViewOrientation = new TextView(getBaseContext());
+                textViewOrientation.setText(mur.getOrientation().toString());
+                ll.addView(textViewOrientation);
+
                 llMur.addView(imageButton);
                 ll.addView(llMur);
+
             }
             Button supprimer = new Button(getBaseContext());
             supprimer.setText("Supprimer la pièce");
