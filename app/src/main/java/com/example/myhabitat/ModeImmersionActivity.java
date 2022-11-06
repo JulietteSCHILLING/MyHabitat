@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.Habitat;
 import habitat.Mur;
+import habitat.Orientation;
 import habitat.Piece;
 
 import java.io.FileInputStream;
@@ -20,6 +22,8 @@ import java.io.FileNotFoundException;
 
 public class ModeImmersionActivity extends AppCompatActivity {
     Habitat habitat;
+    Mur murEnCours;
+    Piece pieceEnCours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +64,14 @@ public class ModeImmersionActivity extends AppCompatActivity {
     }
 
     public void affichePiece(Piece piece){
+        pieceEnCours = piece;
         ImageView imageViewMur = findViewById(R.id.imageViewMur);
-        Mur mur = piece.getMurs().get(0);
+        murEnCours = piece.getMurs().get(0);
 
         //On récupère la photo
         FileInputStream fis = null;
         try {
-            fis = openFileInput(mur.getId()+".data");
+            fis = openFileInput(murEnCours.getId()+".data");
         } catch (FileNotFoundException e) {
             //throw new RuntimeException(e);
         }
@@ -77,5 +82,44 @@ public class ModeImmersionActivity extends AppCompatActivity {
             Log.i("testDrawable", "pas de photo");
             imageViewMur.setImageDrawable(getDrawable(R.drawable.imagemur));
         }
+    }
+
+    public void afficheMur(){
+        ImageView imageViewMur = findViewById(R.id.imageViewMur);
+
+        //On récupère la photo
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(murEnCours.getId()+".data");
+        } catch (FileNotFoundException e) {
+            //throw new RuntimeException(e);
+        }
+        if (fis != null) {
+            Bitmap bm = BitmapFactory.decodeStream(fis);
+            imageViewMur.setImageBitmap(bm);
+        }else{
+            Log.i("testDrawable", "pas de photo");
+            imageViewMur.setImageDrawable(getDrawable(R.drawable.imagemur));
+        }
+    }
+
+    public void afficheSud(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
+        afficheMur();
+    }
+
+    public void afficheNord(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
+        afficheMur();
+    }
+
+    public void afficheEst(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
+        afficheMur();
+    }
+
+    public void afficheOuest(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
+        afficheMur();
     }
 }

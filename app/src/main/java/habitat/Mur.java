@@ -3,6 +3,7 @@ package habitat;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import outils.FabriqueId;
@@ -30,20 +31,25 @@ public class Mur implements Parcelable {
 
     public Mur(JSONObject jsonObjectMur){
         try {
+            id = (int) jsonObjectMur.get("Id");
             String Jorientation = (String) jsonObjectMur.get("Orientation");
             switch (Jorientation){
                 case "NORD" :
                     orientation = Orientation.NORD;
+                    break;
                 case "SUD" :
                     orientation = Orientation.SUD;
+                    break;
                 case "EST" :
                     orientation = Orientation.EST;
+                    break;
                 case "OUEST" :
                     orientation = Orientation.OUEST;
+                    break;
                 default:
                     orientation = Orientation.SUD; //Par défaut
+                    break;
             }
-            id = (int) jsonObjectMur.get("Id");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -106,15 +112,6 @@ public class Mur implements Parcelable {
         sb.append(orientation);
         sb.append("}");
         return sb.toString();
-        /*
-        return "Mur{" +
-                "piece=" + piece +
-                ", orientation=" + orientation +
-                '}';
-
-         */
-
-
     }
 
     @Override

@@ -17,6 +17,13 @@ public class Piece implements Parcelable {
         this.nom = nom;
         this.habitat = habitat;
         murs = new ArrayList<>(4);
+
+        //On créé les murs
+        Mur murN = new Mur(this, Orientation.NORD, this.getHabitat());
+        Mur murE = new Mur(this, Orientation.EST, this.getHabitat());
+        Mur murS = new Mur(this, Orientation.SUD, this.getHabitat());
+        Mur murO = new Mur(this, Orientation.OUEST, this.getHabitat());
+        setMurs(murS, murO, murN, murE);
     }
 
     public Piece(JSONObject jsonObjectPiece){
@@ -79,6 +86,16 @@ public class Piece implements Parcelable {
 
     public void setHabitat(Habitat habitat) {
         this.habitat = habitat;
+    }
+
+    public Mur getMurOrientation(Orientation orientation){
+        Mur result = murs.get(0);
+        for(Mur mur : murs){
+            if(mur.getOrientation().equals(orientation)){
+                result = mur;
+            }
+        }
+        return result;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         ouvrirJSON();
 
-        textView.setText(habitat.toJSON().toString());
+        textView.setText(habitat.toString());
 
     }
 
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Log.i("testJSON", "pbm ouverture");
         }
-        textView.setText(habitat.toJSON().toString());
+        textView.setText(habitat.toString());
     }
 
     public String getFileContent(FileInputStream fis) {

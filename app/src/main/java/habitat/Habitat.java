@@ -88,6 +88,10 @@ public class Habitat implements Parcelable {
         piece.setHabitat(this);
     }
 
+    public void removePiece(Piece piece){
+        pieces.remove(piece);
+    }
+
     public JSONObject toJSON(){
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();

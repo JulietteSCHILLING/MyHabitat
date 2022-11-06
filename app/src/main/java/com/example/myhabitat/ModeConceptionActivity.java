@@ -119,7 +119,6 @@ public class ModeConceptionActivity extends AppCompatActivity {
             TextView textView1 = new TextView(this);
             textView1.setText(piece.getMurs().toString());
             ll.addView(editText);
-            //ll.addView(textView1);
             for(Mur mur : piece.getMurs()){
                 LinearLayout llMur = new LinearLayout(this);
                 llMur.setOrientation(LinearLayout.HORIZONTAL);
@@ -156,16 +155,22 @@ public class ModeConceptionActivity extends AppCompatActivity {
                 llMur.addView(imageButton);
                 ll.addView(llMur);
             }
+            Button supprimer = new Button(getBaseContext());
+            supprimer.setText("Supprimer la pièce");
+            supprimer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    habitat.removePiece(piece);
+                    affichePieces();
+                    majHabitat();
+                }
+            });
+            ll.addView(supprimer);
         }
     }
 
     public void addPiece(View view) {
         Piece piece1 = new Piece("p", habitat);
-        Mur murN = new Mur(piece1, Orientation.NORD, habitat);
-        Mur murE = new Mur(piece1, Orientation.EST, habitat);
-        Mur murS = new Mur(piece1, Orientation.SUD, habitat);
-        Mur murO = new Mur(piece1, Orientation.OUEST, habitat);
-        piece1.setMurs(murS, murO, murN, murE);
         habitat.addPiece(piece1);
         affichePieces();
         majHabitat();
@@ -202,5 +207,9 @@ public class ModeConceptionActivity extends AppCompatActivity {
         }else{
             Log.i("testJSON", "pbm");
         }
+    }
+
+    public void confirmer(View view) {
+        finish();
     }
 }
