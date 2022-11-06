@@ -3,6 +3,7 @@ package com.example.myhabitat;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -55,11 +56,20 @@ public class MainActivity extends AppCompatActivity {
 
          */
 
+
+
         textView = findViewById(R.id.textTest);
 
         ouvrirJSON();
 
         textView.setText(habitat.toString());
+
+        Button b = findViewById(R.id.buttonImmersion);
+        if(habitat.getPieces().size() == 0) {
+            b.setEnabled(false);
+        }else{
+            b.setEnabled(true);
+        }
 
     }
 
@@ -141,6 +151,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         ouvrirJSON();
+        Button b = findViewById(R.id.buttonImmersion);
+        if(habitat.getPieces().size() == 0) {
+            b.setEnabled(false);
+        }else{
+            b.setEnabled(true);
+        }
         super.onPostResume();
     }
 }

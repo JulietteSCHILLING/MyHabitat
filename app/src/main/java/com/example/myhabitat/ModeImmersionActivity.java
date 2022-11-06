@@ -121,6 +121,26 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         }
     }
 
+    public void afficheSud(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
+        afficheMur();
+    }
+
+    public void afficheNord(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
+        afficheMur();
+    }
+
+    public void afficheEst(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
+        afficheMur();
+    }
+
+    public void afficheOuest(View view){
+        murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
+        afficheMur();
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         // On récupère l'angle
