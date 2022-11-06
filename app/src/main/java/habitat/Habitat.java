@@ -2,6 +2,10 @@ package habitat;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import outils.FabriqueId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +16,7 @@ public class Habitat implements Parcelable {
 
     public Habitat() {
         this.pieces = new ArrayList<Piece>();
-        createHabitat();
+        //createHabitat();
     }
 
     protected Habitat(Parcel in) {
@@ -77,5 +81,28 @@ public class Habitat implements Parcelable {
             piece.setHabitat(this);
             piece.setCorrectly();
         }
+    }
+
+    public void addPiece(Piece piece) {
+        pieces.add(piece);
+        piece.setHabitat(this);
+    }
+
+    public JSONObject toJSON(){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for(Piece piece : pieces){
+            jsonArray.put(piece.toJSON());
+        }
+        try {
+            jsonObject.put("Pieces", jsonArray);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonObject;
+    }
+
+    public void reset(){
+        pieces.clear();
     }
 }

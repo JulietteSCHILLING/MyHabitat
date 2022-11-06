@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/layout/activity_mode_conception.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/activity_mode_immersion.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/activity_pieces.xml" value="0.19464720194647203" />
         <entry key="app/src/main/res/layout/content_scrolling.xml" value="0.246875" />

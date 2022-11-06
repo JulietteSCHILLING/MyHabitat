@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         launcher = registerForActivityResult(
                 // Contrat qui détermine le type de l'interaction
                 new ActivityResultContracts.StartActivityForResult(),
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
                             Bundle extras = intent.getExtras();
                             habitat = (Habitat) extras.get("Habitat");
                             habitat.setCorrectly();
-                            textView.setText(habitat.toString());
+                            ouvrirJSON();
+                            textView.setText(habitat.toJSON().toString());
 
                         }
 
@@ -51,81 +53,43 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        habitat = new Habitat();
+         */
 
         textView = findViewById(R.id.textTest);
-        textView.setText(habitat.toString());
+
+        ouvrirJSON();
+
+        textView.setText(habitat.toJSON().toString());
 
     }
 
     public void conception(View view) {
         Intent intent = new Intent(this, ModeConceptionActivity.class);
         intent.putExtra("Habitat", habitat);
+        startActivity(intent);
+        /*
         if (intent.resolveActivity(getPackageManager()) != null){
             launcher.launch(intent);
         }
+
+         */
     }
 
     public void immersion(View view) {
         Intent intent = new Intent(this, ModeImmersionActivity.class);
         intent.putExtra("Habitat", habitat);
+        startActivity(intent);
+        /*
         if (intent.resolveActivity(getPackageManager()) != null){
             launcher.launch(intent);
         }
-    }
 
-    public void enregistrement(){
-        JSONObject enregistrement = new JSONObject();
-        JSONArray pieces = new JSONArray();
-        JSONArray murs = new JSONArray();
-
-        for(Piece piece : habitat.getPieces()){
-            for(Mur mur : piece.getMurs()){
-                JSONObject Jmur = new JSONObject();
-                try {
-                    Jmur.put("Orientation", mur.getOrientation());
-                    Jmur.put("Id", mur.getId());
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-                murs.put(Jmur);
-            }
-            pieces.put(piece.getNom());
-            try {
-                pieces.put(0, murs);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            enregistrement.put("Pieces", pieces);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        if(enregistrement != null){
-            FileOutputStream fos = null;
-            try {
-                fos = openFileOutput("enregistrement.json", MODE_PRIVATE);
-                PrintStream ps = new PrintStream(fos);
-                ps.print(enregistrement);
-                ps.close();
-                fos.flush();
-                Log.i("testEnregistrement", "enregistrement.json a bien été enregistré");
-                ouvrirJSON();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Log.i("testJSON", enregistrement.toString());
-
-        }else{
-            Log.i("testJSON", "pbm");
-        }
+         */
     }
 
     public void ouvrirJSON(){
+        //habitat.reset();
+        habitat = new Habitat();
         FileInputStream fis = null;
         try {
             fis = openFileInput("enregistrement.json");
@@ -138,8 +102,12 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject enregistrement = new JSONObject(json);
                 JSONArray pieces = enregistrement.getJSONArray("Pieces");
-                JSONArray murs = pieces.getJSONArray(0);
-                Log.i("testJSONmurs", murs.toString());
+                for(int i=0; i<pieces.length(); i++){
+                    JSONObject Jpiece = (JSONObject) pieces.get(i);
+                    Piece piece = new Piece(Jpiece);
+                    habitat.addPiece(piece);
+                }
+                Log.i("testJSONouverture", habitat.toString());
 
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -149,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Log.i("testJSON", "pbm ouverture");
         }
+        textView.setText(habitat.toJSON().toString());
     }
 
     public String getFileContent(FileInputStream fis) {
@@ -170,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        enregistrement();
-        super.onPause();
+    protected void onPostResume() {
+        ouvrirJSON();
+        super.onPostResume();
     }
 }

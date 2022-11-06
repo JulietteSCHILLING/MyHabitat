@@ -17,12 +17,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.*;
+import org.json.JSONObject;
 import outils.GestionnaireEditHabitat;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class ModeConceptionActivity extends AppCompatActivity {
     private Habitat habitat;
@@ -168,7 +166,7 @@ public class ModeConceptionActivity extends AppCompatActivity {
         Mur murS = new Mur(piece1, Orientation.SUD, habitat);
         Mur murO = new Mur(piece1, Orientation.OUEST, habitat);
         piece1.setMurs(murS, murO, murN, murE);
-        habitat.getPieces().add(piece1);
+        habitat.addPiece(piece1);
         affichePieces();
         majHabitat();
     }
@@ -176,5 +174,33 @@ public class ModeConceptionActivity extends AppCompatActivity {
     public void majHabitat(){
         Intent intent = new Intent().putExtra("Habitat", habitat);
         setResult(RESULT_OK, intent);
+        enregistrement();
+    }
+
+    public void enregistrement(){
+        JSONObject enregistrement = new JSONObject();
+        enregistrement = habitat.toJSON();
+
+        if(enregistrement != null){
+            FileOutputStream fos = null;
+            try {
+                fos = openFileOutput("enregistrement.json", MODE_PRIVATE);
+                PrintStream ps = new PrintStream(fos);
+                ps.print(enregistrement);
+                ps.close();
+                fos.flush();
+                Log.i("testEnregistrement", "enregistrement.json a bien été enregistré");
+                Log.i("testEnregistrement", "json = " + enregistrement.toString());
+                //ouvrirJSON();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Log.i("testJSON", enregistrement.toString());
+
+        }else{
+            Log.i("testJSON", "pbm");
+        }
     }
 }

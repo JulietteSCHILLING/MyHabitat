@@ -2,6 +2,10 @@ package habitat;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Piece implements Parcelable {
@@ -15,8 +19,24 @@ public class Piece implements Parcelable {
         murs = new ArrayList<>(4);
     }
 
+    public Piece(JSONObject jsonObjectPiece){
+        murs = new ArrayList<Mur>();
+        try {
+            nom = (String) jsonObjectPiece.get("Nom");
+            JSONArray Jmurs = jsonObjectPiece.getJSONArray("Murs");
+            for(int j=0; j<4; j++){
+                JSONObject Jmur = Jmurs.getJSONObject(j);
+                Mur mur = new Mur(Jmur);
+                addMur(mur);
+                mur.setHabitat(habitat);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected Piece(Parcel in) {
-        habitat = new Habitat();
+        //habitat = new Habitat();
         nom = new String();
         nom = in.readString();
         murs = new ArrayList<Mur>(4);
@@ -84,5 +104,25 @@ public class Piece implements Parcelable {
             mur.setPiece(this);
             mur.setHabitat(habitat);
         }
+    }
+
+    public void addMur(Mur e){
+        murs.add(e);
+        e.setPiece(this);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for(Mur mur : murs){
+            jsonArray.put(mur.toJSON());
+        }
+        try {
+            jsonObject.put("Nom", getNom());
+            jsonObject.put("Murs", jsonArray);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonObject;
     }
 }

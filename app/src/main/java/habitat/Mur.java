@@ -3,6 +3,8 @@ package habitat;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.json.JSONException;
+import org.json.JSONObject;
 import outils.FabriqueId;
 
 public class Mur implements Parcelable {
@@ -24,6 +26,27 @@ public class Mur implements Parcelable {
         this.piece = piece;
         this.orientation = orientation;
         id = FabriqueId.getInstance().getId();
+    }
+
+    public Mur(JSONObject jsonObjectMur){
+        try {
+            String Jorientation = (String) jsonObjectMur.get("Orientation");
+            switch (Jorientation){
+                case "NORD" :
+                    orientation = Orientation.NORD;
+                case "SUD" :
+                    orientation = Orientation.SUD;
+                case "EST" :
+                    orientation = Orientation.EST;
+                case "OUEST" :
+                    orientation = Orientation.OUEST;
+                default:
+                    orientation = Orientation.SUD; //Par défaut
+            }
+            id = (int) jsonObjectMur.get("Id");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected Mur(Parcel in) {
@@ -78,7 +101,7 @@ public class Mur implements Parcelable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Mur{");
+        sb.append("Mur{id=").append(id).append(";");
         sb.append("orientation=");
         sb.append(orientation);
         sb.append("}");
@@ -103,5 +126,16 @@ public class Mur implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(orientation);
         dest.writeInt(id);
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("Orientation", orientation);
+            jsonObject.put("Id", id);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonObject;
     }
 }
