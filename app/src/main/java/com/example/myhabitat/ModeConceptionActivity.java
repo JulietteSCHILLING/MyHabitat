@@ -218,4 +218,10 @@ public class ModeConceptionActivity extends AppCompatActivity {
     public void confirmer(View view) {
         finish();
     }
+
+    public void addOuverture(View view) {
+        Intent intent = new Intent(this, CreationOuvertureActivity.class);
+        intent.putExtra("Habitat", habitat);
+        startActivity(intent);
+    }
 }
