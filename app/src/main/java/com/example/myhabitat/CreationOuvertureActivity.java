@@ -1,15 +1,12 @@
 package com.example.myhabitat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.graphics.*;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.Habitat;
@@ -19,17 +16,20 @@ import habitat.Piece;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 
 public class CreationOuvertureActivity extends AppCompatActivity{
 
     private Habitat habitat;
     private ImageView imageViewDepart;
-    private ImageView imageViewArrivee;
     private Piece pieceDepart;
     private Piece pieceArrivee;
+    private Piece pieceEnCours;
     private Orientation orientationPieceDepart;
     private Orientation orientationPieceArrivee;
+    private Paint myPaint;
+    private Canvas canvasDepart;
+    private Rect rectDepart;
+    private Rect rectArrivee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,13 @@ public class CreationOuvertureActivity extends AppCompatActivity{
         }
 
         imageViewDepart = findViewById(R.id.imageViewDepart);
-        imageViewArrivee = findViewById(R.id.imageViewArrivee);
+
+        myPaint = new Paint();
+        myPaint.setStrokeWidth(5);
+        myPaint.setColor(Color.BLUE);
+        myPaint.setStyle(Paint.Style.STROKE);
+
+        setSurfaceForSelect();
 
         Spinner spinnerD = findViewById(R.id.spinnerDepart);
         Spinner spinnerDOrientation = findViewById(R.id.spinnerDOrientation);
@@ -75,7 +81,6 @@ public class CreationOuvertureActivity extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 pieceDepart = habitat.getPieces().get(position);
-                affichePieceDepart();
             }
 
             @Override
@@ -104,7 +109,6 @@ public class CreationOuvertureActivity extends AppCompatActivity{
                         orientationPieceDepart = Orientation.SUD;
                         break;
                 }
-                affichePieceDepart();
             }
 
             @Override
@@ -118,7 +122,6 @@ public class CreationOuvertureActivity extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 pieceArrivee = habitat.getPieces().get(position);
-                affichePieceArrivee();
             }
 
             @Override
@@ -147,12 +150,63 @@ public class CreationOuvertureActivity extends AppCompatActivity{
                         orientationPieceArrivee = Orientation.SUD;
                         break;
                 }
-                affichePieceArrivee();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+    }
+
+    private void setSurfaceForSelect() {
+        SurfaceView surfaceViewDepart = findViewById(R.id.surfaceViewDepart);
+        surfaceViewDepart.setZOrderOnTop(true);
+        surfaceViewDepart.getHolder().setFormat(PixelFormat.TRANSPARENT);
+        canvasDepart = surfaceViewDepart.getHolder().lockCanvas();
+
+        imageViewDepart.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getPointerCount() == 2) {
+                    float x1, x2, y1, y2;
+                    x1 = event.getX(0);
+                    y1 = event.getY(0);
+                    x2 = event.getX(1);
+                    y2 = event.getY(1);
+                    Log.i("SelectActivity", "################################################# Coords : " + x1 + " | " + y1 + "  &  " + x2 + " | " + y2);
+
+                    rectDepart = new Rect((int) x1, (int) y1, (int) x2, (int) y2);
+                    rectDepart.sort();
+
+                    try {
+                        canvasDepart = surfaceViewDepart.getHolder().lockCanvas();
+                        synchronized (surfaceViewDepart.getHolder()) {
+                            canvasDepart.drawColor(0, PorterDuff.Mode.CLEAR);
+                            canvasDepart.drawRect(rectDepart, myPaint);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (canvasDepart != null) {
+                            surfaceViewDepart.getHolder().unlockCanvasAndPost(canvasDepart);
+                        }
+                    }
+
+
+                    //Log.i("SelectActivity", "################################################# Coords Rect : " + rect.left + " | " + rect.top + "  &  " + rect.right + " | " + rect.bottom);
+
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (rectDepart != null) {
+                        Log.i("Touchup", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ je releve mon doigt");
+
+                        //showImage();
+
+                    }
+                }
+
+                return true;
             }
         });
     }
@@ -174,6 +228,12 @@ public class CreationOuvertureActivity extends AppCompatActivity{
             }else{
                 imageViewDepart.setImageDrawable(getDrawable(R.drawable.imagemur));
             }
+            imageViewDepart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 
@@ -190,11 +250,20 @@ public class CreationOuvertureActivity extends AppCompatActivity{
             if (fis != null) {
                 Bitmap bm = BitmapFactory.decodeStream(fis);
 
-                imageViewArrivee.setImageBitmap(bm);
+                imageViewDepart.setImageBitmap(bm);
             }else{
-                imageViewArrivee.setImageDrawable(getDrawable(R.drawable.imagemur));
+                imageViewDepart.setImageDrawable(getDrawable(R.drawable.imagemur));
             }
         }
     }
 
+    public void setSDepart(View view) {
+        pieceEnCours = pieceDepart;
+        affichePieceDepart();
+    }
+
+    public void setSArrivee(View view) {
+        pieceEnCours = pieceArrivee;
+        affichePieceArrivee();
+    }
 }
