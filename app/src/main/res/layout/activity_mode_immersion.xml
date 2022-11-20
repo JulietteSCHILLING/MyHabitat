@@ -8,8 +8,8 @@
         tools:context=".ModeImmersionActivity">
 
     <ImageView
-            android:layout_width="308dp"
-            android:layout_height="305dp"
+            android:layout_width="414dp"
+            android:layout_height="355dp"
             app:srcCompat="@drawable/imagemur"
             android:id="@+id/imageViewMur"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,4 +30,24 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="117dp"
             app:layout_constraintBottom_toTopOf="@+id/imageViewMur"/>
+
+    <SurfaceView
+            android:layout_width="414dp"
+            android:layout_height="355dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintVertical_bias="0.69"
+            android:id="@+id/surfaceView"/>
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewPiece"
+            tools:layout_editor_absoluteX="176dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewMur"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

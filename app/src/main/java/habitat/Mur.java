@@ -15,12 +15,6 @@ public class Mur implements Parcelable {
     private Orientation orientation;
     private int id; //Utile pour stocker la photo associée au mur
 
-    public Mur(Piece piece) {
-        this.piece = piece;
-        this.orientation = Orientation.SUD;  //Par défaut
-        id = FabriqueId.getInstance().getId();
-    }
-
     public Mur(Piece piece, Orientation orientation) {
         this.piece = piece;
         this.orientation = orientation;
@@ -56,6 +50,7 @@ public class Mur implements Parcelable {
     protected Mur(Parcel in) {
         orientation = (Orientation) in.readSerializable();
         id = in.readInt();
+        piece = new Piece("");
     }
 
     public static final Creator<Mur> CREATOR = new Creator<Mur>() {
@@ -100,6 +95,7 @@ public class Mur implements Parcelable {
         sb.append("Mur{id=").append(id).append(";");
         sb.append("orientation=");
         sb.append(orientation);
+        sb.append(";piece=").append(piece.getNom());
         sb.append("}");
         return sb.toString();
     }
@@ -120,6 +116,7 @@ public class Mur implements Parcelable {
         try {
             jsonObject.put("Orientation", orientation);
             jsonObject.put("Id", id);
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

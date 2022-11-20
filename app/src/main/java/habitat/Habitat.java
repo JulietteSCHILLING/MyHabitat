@@ -1,5 +1,6 @@
 package habitat;
 
+import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import org.json.JSONArray;
@@ -93,6 +94,16 @@ public class Habitat implements Parcelable {
 
     public void addOuverture(Ouverture ouverture){
         ouvertures.add(ouverture);
+        for(Piece piece : pieces){
+            for(Mur mur : piece.getMurs()){
+                if(ouverture.getMurDepart().getId() == mur.getId()){
+                    ouverture.setMurDepart(mur);
+                }
+                if(ouverture.getMurArrivee().getId() == mur.getId()){
+                    ouverture.setMurArrivee(mur);
+                }
+            }
+        }
     }
 
     public void removeOuverture(Ouverture ouverture){
@@ -101,6 +112,15 @@ public class Habitat implements Parcelable {
 
     public void removePiece(Piece piece){
         pieces.remove(piece);
+        //On vérifie qu'il n'existe pas d'ouvertures
+        for(Mur mur : piece.getMurs()){
+            ArrayList<Ouverture> ouvertureArrayList = getOuvertureDeMur(mur);
+            if(!ouvertureArrayList.isEmpty()){
+                for(Ouverture ouverture : ouvertureArrayList){
+                    removeOuverture(ouverture);
+                }
+            }
+        }
     }
 
     public JSONObject toJSON(){
@@ -136,5 +156,27 @@ public class Habitat implements Parcelable {
     @Override
     public int hashCode() {
         return Objects.hash(pieces, ouvertures);
+    }
+
+    public ArrayList<Ouverture> getOuvertureDeMur(Mur mur){
+        ArrayList<Ouverture> ouvertureArrayList = new ArrayList<Ouverture>();
+        for(Ouverture ouverture : ouvertures){
+            if(ouverture.getMurDepart().getId() == (mur.getId()) || ouverture.getMurArrivee().getId() == (mur.getId())){
+                ouvertureArrayList.add(ouverture);
+            }
+        }
+        for(Ouverture ouverture : ouvertureArrayList) {
+            for (Piece piece : pieces) {
+                for (Mur mur1 : piece.getMurs()) {
+                    if (ouverture.getMurDepart().getId() == mur1.getId()) {
+                        ouverture.setMurDepart(mur1);
+                    }
+                    if (ouverture.getMurArrivee().getId() == mur1.getId()) {
+                        ouverture.setMurArrivee(mur1);
+                    }
+                }
+            }
+        }
+        return ouvertureArrayList;
     }
 }

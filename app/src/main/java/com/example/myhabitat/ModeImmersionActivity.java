@@ -2,39 +2,41 @@ package com.example.myhabitat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.*;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import habitat.Habitat;
-import habitat.Mur;
-import habitat.Orientation;
-import habitat.Piece;
+import habitat.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ModeImmersionActivity extends AppCompatActivity implements SensorEventListener {
     Habitat habitat;
     Mur murEnCours;
     Piece pieceEnCours;
+    TextView textViewPiece;
     private SensorManager sensorManager;
     private ImageView imageViewBoussole;
     private float debut = 0;
     private ImageView imageViewMur;
+    private SurfaceView surfaceView;
+    private Paint myPaint;
+    private Canvas canvas;
+    private ArrayList<Rect> rectangles;
+    private HashMap<Rect, Piece> pieceArriveeRect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
         setContentView(R.layout.activity_mode_immersion);
 
+        rectangles = new ArrayList<Rect>();
+        pieceArriveeRect = new HashMap<Rect, Piece>();
+
         pieceEnCours = habitat.getPieces().get(0);
         affichePiece(pieceEnCours);
         imageViewBoussole = findViewById(R.id.imageViewBoussole);
@@ -59,7 +64,40 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
+        surfaceView = findViewById(R.id.surfaceView);
+        surfaceView.setZOrderOnTop(true);
+        surfaceView.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
+        canvas = surfaceView.getHolder().lockCanvas();
+
+        myPaint = new Paint();
+        myPaint.setStrokeWidth(5);
+        myPaint.setColor(Color.RED);
+        myPaint.setStyle(Paint.Style.STROKE);
+
+
+        imageViewMur.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                boolean res = false;
+                Rect r = null;
+                int touchX = (int) event.getX();
+                int touchY = (int) event.getY();
+                for(Rect rect : rectangles){
+                    if(rect.contains(touchX,touchY)){
+                        res = true;
+                        r = rect;
+                    }
+                }
+                if(res && r!=null){
+                    Log.i("testTouchRect", "je touche rect="+r.toString());
+                    Log.i("testHM", pieceArriveeRect+"");
+                    pieceEnCours = pieceArriveeRect.get(r);
+                    afficheMur();
+                }
+                return true;
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,26 +123,15 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
     public void affichePiece(Piece piece){
         pieceEnCours = piece;
-        ImageView imageViewMur = findViewById(R.id.imageViewMur);
+        imageViewMur = findViewById(R.id.imageViewMur);
         murEnCours = piece.getMurs().get(0);
 
-        //On récupère la photo
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(murEnCours.getId()+".data");
-        } catch (FileNotFoundException e) {
-            //throw new RuntimeException(e);
-        }
-        if (fis != null) {
-            Bitmap bm = BitmapFactory.decodeStream(fis);
-            imageViewMur.setImageBitmap(bm);
-        }else{
-            Log.i("testDrawable", "pas de photo");
-            imageViewMur.setImageDrawable(getDrawable(R.drawable.imagemur));
-        }
+        afficheMur();
     }
 
     public void afficheMur(){
+        textViewPiece = findViewById(R.id.textViewPiece);
+        textViewPiece.setText("piece="+pieceEnCours.getNom());
         //On récupère la photo
         FileInputStream fis = null;
         try {
@@ -116,8 +143,60 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
             Bitmap bm = BitmapFactory.decodeStream(fis);
             imageViewMur.setImageBitmap(bm);
         }else{
-            Log.i("testDrawable", "pas de photo");
+            //Log.i("testDrawable", "pas de photo");
             imageViewMur.setImageDrawable(getDrawable(R.drawable.imagemur));
+        }
+        afficheOuvertures();
+    }
+
+    public void afficheOuvertures(){
+        ArrayList<Ouverture> ouvertures = habitat.getOuvertureDeMur(murEnCours);
+        Log.i("testOuvertures", ouvertures+"");
+        rectangles.clear();
+        pieceArriveeRect.clear();
+
+        if(ouvertures.isEmpty()){
+            //Il n'y a pas d'ouvertures à afficher
+            try {
+                canvas = surfaceView.getHolder().lockCanvas();
+                synchronized (surfaceView.getHolder()) {
+                    canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (canvas != null) {
+                    surfaceView.getHolder().unlockCanvasAndPost(canvas);
+                }
+            }
+        }else{
+            for(Ouverture ouverture : ouvertures) {
+                //Si mur de depart
+                if (murEnCours.getId() == ouverture.getMurDepart().getId()) {
+                    rectangles.add(ouverture.getRectDepart());
+                    Log.i("testGetPiece", ouverture.getMurArrivee()+"");
+                    pieceArriveeRect.put(ouverture.getRectDepart(), ouverture.getMurArrivee().getPiece());
+                } else {
+                    //Si mur d'arrivee
+                    rectangles.add(ouverture.getRectArrivee());
+                    pieceArriveeRect.put(ouverture.getRectArrivee(), ouverture.getMurDepart().getPiece());
+                }
+            }
+            try {
+                canvas = surfaceView.getHolder().lockCanvas();
+                synchronized (surfaceView.getHolder()) {
+                    for(Rect rect : rectangles){
+                        canvas.drawRect(rect, myPaint);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (canvas != null) {
+                    surfaceView.getHolder().unlockCanvasAndPost(canvas);
+                }
+            }
+
         }
     }
 
@@ -140,16 +219,20 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         imageViewBoussole.startAnimation(rotateAnimation);
 
 
+        Mur newMur = null;
         if(angle<(-45) && angle>=(-135)){
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.EST);
+            newMur = pieceEnCours.getMurOrientation(Orientation.EST);
         } else if (angle<(-135) && angle>=(-225)) {
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.SUD);
+            newMur = pieceEnCours.getMurOrientation(Orientation.SUD);
         } else if (angle<(-225) && angle>=(-315)) {
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.OUEST);
+            newMur = pieceEnCours.getMurOrientation(Orientation.OUEST);
         }else{
-            murEnCours = pieceEnCours.getMurOrientation(Orientation.NORD);
+            newMur = pieceEnCours.getMurOrientation(Orientation.NORD);
         }
-        afficheMur();
+        if(newMur != murEnCours){
+            murEnCours = newMur;
+            afficheMur();
+        }
 
 
         //Maj de l'angle de depart

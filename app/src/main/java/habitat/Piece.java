@@ -2,6 +2,7 @@ package habitat;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class Piece implements Parcelable {
             for(int j=0; j<4; j++){
                 JSONObject Jmur = Jmurs.getJSONObject(j);
                 Mur mur = new Mur(Jmur);
+                mur.setPiece(this);
                 addMur(mur);
             }
         } catch (JSONException e) {

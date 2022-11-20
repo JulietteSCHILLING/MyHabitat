@@ -286,8 +286,11 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     public void confirmer(View view) {
         Ouverture ouverture = new Ouverture(pieceDepart.getMurOrientation(orientationPieceDepart), pieceArrivee.getMurOrientation(orientationPieceArrivee), rectDepart, rectArrivee);
         habitat.addOuverture(ouverture);
+        //On re-set correctement les murs (pas besoin finalemnt...)
+        Log.i("testGetMur2", ouverture.getMurDepart().getPiece()+"");
+        Log.i("testGetMur2", ouverture.getMurArrivee().getPiece()+"");
+
         enregistrement();
-        Log.i("testOuverture", String.valueOf(habitat.toJSON()));
     }
 
     public void enregistrement(){
