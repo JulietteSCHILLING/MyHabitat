@@ -168,44 +168,64 @@ public class CreationOuvertureActivity extends AppCompatActivity{
         imageViewDepart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getPointerCount() == 2) {
-                    float x1, x2, y1, y2;
-                    x1 = event.getX(0);
-                    y1 = event.getY(0);
-                    x2 = event.getX(1);
-                    y2 = event.getY(1);
-                    Log.i("SelectActivity", "################################################# Coords : " + x1 + " | " + y1 + "  &  " + x2 + " | " + y2);
+                if (pieceEnCours != null) {
+                    if (event.getPointerCount() == 2) {
+                        float x1, x2, y1, y2;
+                        x1 = event.getX(0);
+                        y1 = event.getY(0);
+                        x2 = event.getX(1);
+                        y2 = event.getY(1);
+                        Log.i("SelectActivity", "################################################# Coords : " + x1 + " | " + y1 + "  &  " + x2 + " | " + y2);
 
-                    rectDepart = new Rect((int) x1, (int) y1, (int) x2, (int) y2);
-                    rectDepart.sort();
+                        if (pieceEnCours.equals(pieceDepart)) {
+                            rectDepart = new Rect((int) x1, (int) y1, (int) x2, (int) y2);
+                            rectDepart.sort();
 
-                    try {
-                        canvasDepart = surfaceViewDepart.getHolder().lockCanvas();
-                        synchronized (surfaceViewDepart.getHolder()) {
-                            canvasDepart.drawColor(0, PorterDuff.Mode.CLEAR);
-                            canvasDepart.drawRect(rectDepart, myPaint);
+                            try {
+                                canvasDepart = surfaceViewDepart.getHolder().lockCanvas();
+                                synchronized (surfaceViewDepart.getHolder()) {
+                                    canvasDepart.drawColor(0, PorterDuff.Mode.CLEAR);
+                                    canvasDepart.drawRect(rectDepart, myPaint);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (canvasDepart != null) {
+                                    surfaceViewDepart.getHolder().unlockCanvasAndPost(canvasDepart);
+                                }
+                            }
+                        } else {
+                            rectArrivee = new Rect((int) x1, (int) y1, (int) x2, (int) y2);
+                            rectArrivee.sort();
+
+                            try {
+                                canvasDepart = surfaceViewDepart.getHolder().lockCanvas();
+                                synchronized (surfaceViewDepart.getHolder()) {
+                                    canvasDepart.drawColor(0, PorterDuff.Mode.CLEAR);
+                                    canvasDepart.drawRect(rectArrivee, myPaint);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (canvasDepart != null) {
+                                    surfaceViewDepart.getHolder().unlockCanvasAndPost(canvasDepart);
+                                }
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (canvasDepart != null) {
-                            surfaceViewDepart.getHolder().unlockCanvasAndPost(canvasDepart);
+
+
+                        //Log.i("SelectActivity", "################################################# Coords Rect : " + rect.left + " | " + rect.top + "  &  " + rect.right + " | " + rect.bottom);
+
+                    }
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        if (rectDepart != null) {
+                            Log.i("Touchup", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ je releve mon doigt");
+
+                            //showImage();
+
                         }
                     }
-
-
-                    //Log.i("SelectActivity", "################################################# Coords Rect : " + rect.left + " | " + rect.top + "  &  " + rect.right + " | " + rect.bottom);
-
                 }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (rectDepart != null) {
-                        Log.i("Touchup", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ je releve mon doigt");
-
-                        //showImage();
-
-                    }
-                }
-
                 return true;
             }
         });

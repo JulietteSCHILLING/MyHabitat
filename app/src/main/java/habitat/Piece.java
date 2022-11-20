@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Piece implements Parcelable {
     private Habitat habitat;
@@ -141,5 +142,17 @@ public class Piece implements Parcelable {
             throw new RuntimeException(e);
         }
         return jsonObject;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return Objects.equals(habitat, ((Piece) o).getHabitat()) && Objects.equals(nom, ((Piece) o).getNom()) && Objects.equals(murs, ((Piece) o).getMurs());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(habitat, nom, murs);
     }
 }

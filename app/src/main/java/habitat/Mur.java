@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import outils.FabriqueId;
 
+import java.util.Objects;
+
 public class Mur implements Parcelable {
 
     private Habitat habitat;
@@ -134,5 +136,17 @@ public class Mur implements Parcelable {
             throw new RuntimeException(e);
         }
         return jsonObject;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return id == ((Mur) o).getId() && Objects.equals(habitat, ((Mur) o).getHabitat()) && Objects.equals(piece, ((Mur) o).getPiece()) && orientation == ((Mur) o).getOrientation();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(habitat, piece, orientation, id);
     }
 }

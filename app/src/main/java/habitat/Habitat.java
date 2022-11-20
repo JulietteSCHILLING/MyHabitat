@@ -9,6 +9,7 @@ import outils.FabriqueId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Habitat implements Parcelable {
 
@@ -108,5 +109,16 @@ public class Habitat implements Parcelable {
 
     public void reset(){
         pieces.clear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieces);
     }
 }
