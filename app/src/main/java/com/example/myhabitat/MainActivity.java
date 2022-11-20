@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.Habitat;
 import habitat.Mur;
+import habitat.Ouverture;
 import habitat.Piece;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,10 +118,16 @@ public class MainActivity extends AppCompatActivity {
                     Piece piece = new Piece(Jpiece);
                     habitat.addPiece(piece);
                 }
+                JSONArray ouvertures = enregistrement.getJSONArray("Ouvertures");
+                for(int i=0; i<ouvertures.length(); i++){
+                    JSONObject Jouverture = (JSONObject) ouvertures.get(i);
+                    Ouverture ouverture = new Ouverture(Jouverture);
+                    habitat.addOuverture(ouverture);
+                }
                 Log.i("testJSONouverture", habitat.toString());
 
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }
 
             Log.i("testJSON", json);

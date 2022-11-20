@@ -10,20 +10,18 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Piece implements Parcelable {
-    private Habitat habitat;
     private String nom;
     private ArrayList<Mur> murs;
 
-    public Piece(String nom, Habitat habitat) {
+    public Piece(String nom) {
         this.nom = nom;
-        this.habitat = habitat;
         murs = new ArrayList<>(4);
 
         //On créé les murs
-        Mur murN = new Mur(this, Orientation.NORD, this.getHabitat());
-        Mur murE = new Mur(this, Orientation.EST, this.getHabitat());
-        Mur murS = new Mur(this, Orientation.SUD, this.getHabitat());
-        Mur murO = new Mur(this, Orientation.OUEST, this.getHabitat());
+        Mur murN = new Mur(this, Orientation.NORD);
+        Mur murE = new Mur(this, Orientation.EST);
+        Mur murS = new Mur(this, Orientation.SUD);
+        Mur murO = new Mur(this, Orientation.OUEST);
         setMurs(murS, murO, murN, murE);
     }
 
@@ -36,7 +34,6 @@ public class Piece implements Parcelable {
                 JSONObject Jmur = Jmurs.getJSONObject(j);
                 Mur mur = new Mur(Jmur);
                 addMur(mur);
-                mur.setHabitat(habitat);
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -81,14 +78,6 @@ public class Piece implements Parcelable {
         }
     }
 
-    public Habitat getHabitat() {
-        return habitat;
-    }
-
-    public void setHabitat(Habitat habitat) {
-        this.habitat = habitat;
-    }
-
     public Mur getMurOrientation(Orientation orientation){
         Mur result = murs.get(0);
         for(Mur mur : murs){
@@ -120,7 +109,6 @@ public class Piece implements Parcelable {
     public void setCorrectly() {
         for(Mur mur : murs){
             mur.setPiece(this);
-            mur.setHabitat(habitat);
         }
     }
 
@@ -148,11 +136,11 @@ public class Piece implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return Objects.equals(habitat, ((Piece) o).getHabitat()) && Objects.equals(nom, ((Piece) o).getNom()) && Objects.equals(murs, ((Piece) o).getMurs());
+        return Objects.equals(nom, ((Piece) o).getNom()) && Objects.equals(murs, ((Piece) o).getMurs());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(habitat, nom, murs);
+        return Objects.hash(nom, murs);
     }
 }

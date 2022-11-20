@@ -14,15 +14,22 @@ import java.util.Objects;
 public class Habitat implements Parcelable {
 
     private ArrayList<Piece> pieces;
+    private ArrayList<Ouverture> ouvertures;
 
     public Habitat() {
         this.pieces = new ArrayList<Piece>();
-        //createHabitat();
+        this.ouvertures = new ArrayList<Ouverture>();
     }
 
     protected Habitat(Parcel in) {
         pieces = new ArrayList<Piece>();
+        ouvertures = new ArrayList<Ouverture>();
         in.readList(pieces, Piece.class.getClassLoader());
+        in.readList(ouvertures, Ouverture.class.getClassLoader());
+    }
+
+    public Habitat(Piece... pieces) {
+        this.pieces = new ArrayList<>(Arrays.asList(pieces));
     }
 
     public static final Creator<Habitat> CREATOR = new Creator<Habitat>() {
@@ -37,19 +44,6 @@ public class Habitat implements Parcelable {
         }
     };
 
-    public void createHabitat(){
-        Piece piece1 = new Piece("p1", this);
-        Mur murN = new Mur(piece1, Orientation.NORD, this);
-        Mur murE = new Mur(piece1, Orientation.EST, this);
-        Mur murS = new Mur(piece1, Orientation.SUD, this);
-        Mur murO = new Mur(piece1, Orientation.OUEST, this);
-        piece1.setMurs(murS, murO, murN, murE);
-        pieces.add(piece1);
-    }
-
-    public Habitat(Piece... pieces) {
-        this.pieces = new ArrayList<>(Arrays.asList(pieces));
-    }
 
     public ArrayList<Piece> getPieces() {
         return pieces;
@@ -59,10 +53,19 @@ public class Habitat implements Parcelable {
         this.pieces = pieces;
     }
 
+    public ArrayList<Ouverture> getOuvertures() {
+        return ouvertures;
+    }
+
+    public void setOuvertures(ArrayList<Ouverture> ouvertures) {
+        this.ouvertures = ouvertures;
+    }
+
     @Override
     public String toString() {
         return "Habitat{" +
                 "pieces=" + pieces.toString() +
+                "; ouvertures=" + ouvertures.toString() +
                 '}';
     }
 
@@ -74,19 +77,26 @@ public class Habitat implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeList(pieces);
+        dest.writeList(ouvertures);
     }
 
     //Fonction utile quand on recupere via Intent pour re-set correctement
     public void setCorrectly(){
         for(Piece piece : pieces){
-            piece.setHabitat(this);
             piece.setCorrectly();
         }
     }
 
     public void addPiece(Piece piece) {
         pieces.add(piece);
-        piece.setHabitat(this);
+    }
+
+    public void addOuverture(Ouverture ouverture){
+        ouvertures.add(ouverture);
+    }
+
+    public void removeOuverture(Ouverture ouverture){
+        ouvertures.remove(ouverture);
     }
 
     public void removePiece(Piece piece){
@@ -95,12 +105,17 @@ public class Habitat implements Parcelable {
 
     public JSONObject toJSON(){
         JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
+        JSONArray jsonArrayPiece = new JSONArray();
+        JSONArray jsonArrayOuvertures = new JSONArray();
         for(Piece piece : pieces){
-            jsonArray.put(piece.toJSON());
+            jsonArrayPiece.put(piece.toJSON());
+        }
+        for(Ouverture ouverture : ouvertures){
+            jsonArrayOuvertures.put(ouverture.toJSON());
         }
         try {
-            jsonObject.put("Pieces", jsonArray);
+            jsonObject.put("Pieces", jsonArrayPiece);
+            jsonObject.put("Ouvertures", jsonArrayOuvertures);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -109,6 +124,7 @@ public class Habitat implements Parcelable {
 
     public void reset(){
         pieces.clear();
+        ouvertures.clear();
     }
 
     @Override
@@ -119,6 +135,6 @@ public class Habitat implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pieces);
+        return Objects.hash(pieces, ouvertures);
     }
 }

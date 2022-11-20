@@ -11,21 +11,17 @@ import outils.FabriqueId;
 import java.util.Objects;
 
 public class Mur implements Parcelable {
-
-    private Habitat habitat;
     private Piece piece;
     private Orientation orientation;
     private int id; //Utile pour stocker la photo associée au mur
 
-    public Mur(Piece piece, Habitat habitat) {
-        this.habitat = habitat;
+    public Mur(Piece piece) {
         this.piece = piece;
         this.orientation = Orientation.SUD;  //Par défaut
         id = FabriqueId.getInstance().getId();
     }
 
-    public Mur(Piece piece, Orientation orientation, Habitat habitat) {
-        this.habitat = habitat;
+    public Mur(Piece piece, Orientation orientation) {
         this.piece = piece;
         this.orientation = orientation;
         id = FabriqueId.getInstance().getId();
@@ -90,14 +86,6 @@ public class Mur implements Parcelable {
         this.orientation = orientation;
     }
 
-    public Habitat getHabitat() {
-        return habitat;
-    }
-
-    public void setHabitat(Habitat habitat) {
-        this.habitat = habitat;
-    }
-
     public int getId() {
         return id;
     }
@@ -142,11 +130,11 @@ public class Mur implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return id == ((Mur) o).getId() && Objects.equals(habitat, ((Mur) o).getHabitat()) && Objects.equals(piece, ((Mur) o).getPiece()) && orientation == ((Mur) o).getOrientation();
+        return id == ((Mur) o).getId() && Objects.equals(piece, ((Mur) o).getPiece()) && orientation == ((Mur) o).getOrientation();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(habitat, piece, orientation, id);
+        return Objects.hash(piece, orientation, id);
     }
 }

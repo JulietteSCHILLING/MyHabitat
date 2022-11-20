@@ -9,13 +9,10 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import habitat.Habitat;
-import habitat.Mur;
-import habitat.Orientation;
-import habitat.Piece;
+import habitat.*;
+import org.json.JSONObject;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 public class CreationOuvertureActivity extends AppCompatActivity{
 
@@ -30,6 +27,7 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     private Canvas canvasDepart;
     private Rect rectDepart;
     private Rect rectArrivee;
+    private Button buttonConfirmer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +43,9 @@ public class CreationOuvertureActivity extends AppCompatActivity{
                 this.habitat.setCorrectly();
             }
         }
+
+        buttonConfirmer = findViewById(R.id.buttonConfirmer);
+        buttonConfirmer.setEnabled(false);
 
         imageViewDepart = findViewById(R.id.imageViewDepart);
 
@@ -212,19 +213,14 @@ public class CreationOuvertureActivity extends AppCompatActivity{
                                 }
                             }
                         }
-
-
-                        //Log.i("SelectActivity", "################################################# Coords Rect : " + rect.left + " | " + rect.top + "  &  " + rect.right + " | " + rect.bottom);
-
-                    }
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        if (rectDepart != null) {
-                            Log.i("Touchup", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ je releve mon doigt");
-
-                            //showImage();
-
+                        if(rectArrivee != null && rectDepart != null){
+                            buttonConfirmer.setEnabled(true);
                         }
+
+                        //Log.i("testCoordsRect", "Coords Rect : " + rect.left + " | " + rect.top + "  &  " + rect.right + " | " + rect.bottom);
+
                     }
+
                 }
                 return true;
             }
@@ -285,5 +281,39 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     public void setSArrivee(View view) {
         pieceEnCours = pieceArrivee;
         affichePieceArrivee();
+    }
+
+    public void confirmer(View view) {
+        Ouverture ouverture = new Ouverture(pieceDepart.getMurOrientation(orientationPieceDepart), pieceArrivee.getMurOrientation(orientationPieceArrivee), rectDepart, rectArrivee);
+        habitat.addOuverture(ouverture);
+        enregistrement();
+        Log.i("testOuverture", String.valueOf(habitat.toJSON()));
+    }
+
+    public void enregistrement(){
+        JSONObject enregistrement = new JSONObject();
+        enregistrement = habitat.toJSON();
+
+        if(enregistrement != null){
+            FileOutputStream fos = null;
+            try {
+                fos = openFileOutput("enregistrement.json", MODE_PRIVATE);
+                PrintStream ps = new PrintStream(fos);
+                ps.print(enregistrement);
+                ps.close();
+                fos.flush();
+                Log.i("testEnregistrement", "enregistrement.json a bien été enregistré");
+                Log.i("testEnregistrement", "json = " + enregistrement.toString());
+                //ouvrirJSON();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Log.i("testJSON", enregistrement.toString());
+
+        }else{
+            Log.i("testJSON", "pbm");
+        }
     }
 }

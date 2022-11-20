@@ -176,7 +176,7 @@ public class ModeConceptionActivity extends AppCompatActivity {
     }
 
     public void addPiece(View view) {
-        Piece piece1 = new Piece("p", habitat);
+        Piece piece1 = new Piece("p");
         habitat.addPiece(piece1);
         affichePieces();
         majHabitat();
