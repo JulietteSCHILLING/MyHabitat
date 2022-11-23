@@ -38,6 +38,13 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     private ArrayList<Rect> rectangles;
     private HashMap<Rect, Piece> pieceArriveeRect;
 
+    /**
+     * onCreate de ModeImmersionActivity
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,12 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         });
     }
 
+    /**
+     * Cree le menu de l'activite
+     * @param menu The options menu in which you place your items.
+     *
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_immersion, menu);
 
@@ -121,6 +134,10 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         return true;
     }
 
+    /**
+     * selectionne la piece en cours
+     * @param piece
+     */
     public void affichePiece(Piece piece){
         pieceEnCours = piece;
         imageViewMur = findViewById(R.id.imageViewMur);
@@ -129,6 +146,9 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         afficheMur();
     }
 
+    /**
+     * Affiche le mur en cours
+     */
     public void afficheMur(){
         textViewPiece = findViewById(R.id.textViewPiece);
         textViewPiece.setText("piece="+pieceEnCours.getNom());
@@ -149,6 +169,10 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         afficheOuvertures();
     }
 
+
+    /**
+     * Affiche l'ensemble des ouvertures du mur courant
+     */
     public void afficheOuvertures(){
         ArrayList<Ouverture> ouvertures = habitat.getOuvertureDeMur(murEnCours);
         Log.i("testOuvertures", ouvertures+"");
@@ -201,6 +225,10 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         }
     }
 
+    /**
+     * Gere la sensibilite du Sensor = affichage de la mur + màj mur en cours
+     * @param event the {@link android.hardware.SensorEvent SensorEvent}.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -247,17 +275,31 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
     }
 
+    /**
+     * Fonction du sensor
+     * @param sensor
+     * @param accuracy The new accuracy of this sensor, one of
+     *         {@code SensorManager.SENSOR_STATUS_*}
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
+    /**
+     * Fonction appelee lors du changement d'activite
+     * Permet de desactiver le Sensor
+     */
     @Override
     protected void onPause() {
         sensorManager.unregisterListener(this);
         super.onPause();
     }
 
+    /**
+     * Fonction appelee lors de l'arrive dans l'activite
+     * Permet d'activer le Sensor
+     */
     @Override
     protected void onResume() {
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);

@@ -30,6 +30,13 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     private Rect rectArrivee;
     private Button buttonConfirmer;
 
+    /**
+     * onCreate de CreationOuvertureActivity
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +168,9 @@ public class CreationOuvertureActivity extends AppCompatActivity{
         });
     }
 
+    /**
+     * Fonction qui initialise la surface pour la selection
+     */
     private void setSurfaceForSelect() {
         SurfaceView surfaceViewDepart = findViewById(R.id.surfaceViewDepart);
         surfaceViewDepart.setZOrderOnTop(true);
@@ -229,6 +239,9 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     }
 
 
+    /**
+     * Fonction qui affiche la piece de depart
+     */
     public void affichePieceDepart(){
         if(pieceDepart != null && orientationPieceDepart != null){
             Mur mur = pieceDepart.getMurOrientation(orientationPieceDepart);
@@ -255,6 +268,9 @@ public class CreationOuvertureActivity extends AppCompatActivity{
     }
 
 
+    /**
+     * Fonction qui affiche la piece d'arrivee
+     */
     public void affichePieceArrivee(){
         if(pieceArrivee != null && orientationPieceArrivee != null){
             Mur mur = pieceArrivee.getMurOrientation(orientationPieceArrivee);
@@ -274,16 +290,28 @@ public class CreationOuvertureActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Selection de la piece de depart comme piece courante
+     * @param view
+     */
     public void setSDepart(View view) {
         pieceEnCours = pieceDepart;
         affichePieceDepart();
     }
 
+    /**
+     * Selection de la piece d'arrivee comme piece courante
+     * @param view
+     */
     public void setSArrivee(View view) {
         pieceEnCours = pieceArrivee;
         affichePieceArrivee();
     }
 
+    /**
+     * Confirme l'ajout de l'ouverture + retour a l'activite precedente
+     * @param view
+     */
     public void confirmer(View view) {
         Ouverture ouverture = new Ouverture(pieceDepart.getMurOrientation(orientationPieceDepart), pieceArrivee.getMurOrientation(orientationPieceArrivee), rectDepart, rectArrivee);
         habitat.addOuverture(ouverture);
@@ -295,6 +323,9 @@ public class CreationOuvertureActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * Enregistrement de habitat sous format JSON
+     */
     public void enregistrement(){
         JSONObject enregistrement = new JSONObject();
         enregistrement = habitat.toJSON();

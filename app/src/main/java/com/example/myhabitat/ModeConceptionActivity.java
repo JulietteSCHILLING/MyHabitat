@@ -30,6 +30,13 @@ public class ModeConceptionActivity extends AppCompatActivity {
     private ImageButton photoEnCours;  //Detecte à quel mur associer la photo en cours
 
 
+    /**
+     * onCreate de ModeConceptionActivity
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +96,9 @@ public class ModeConceptionActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Permet d'afficher l'ensemble des pieces de l'habitat
+     */
     private void affichePieces() {
         gestionnaire.reset();
         LinearLayout ll = findViewById(R.id.linearLayout);
@@ -175,6 +185,10 @@ public class ModeConceptionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Permet d'ajouter une piece a l'habitat et de l'afficher
+     * @param view
+     */
     public void addPiece(View view) {
         Piece piece1 = new Piece("p");
         habitat.addPiece(piece1);
@@ -182,12 +196,18 @@ public class ModeConceptionActivity extends AppCompatActivity {
         majHabitat();
     }
 
+    /**
+     * Mise à jour de l'habitat
+     */
     public void majHabitat(){
         Intent intent = new Intent().putExtra("Habitat", habitat);
         setResult(RESULT_OK, intent);
         enregistrement();
     }
 
+    /**
+     * Enregistrement de l'habitat sous format JSON
+     */
     public void enregistrement(){
         JSONObject enregistrement = new JSONObject();
         enregistrement = habitat.toJSON();
@@ -215,10 +235,18 @@ public class ModeConceptionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Permet un retour à l'activite precedente
+     * @param view
+     */
     public void confirmer(View view) {
         finish();
     }
 
+    /**
+     * Ajoute une Ouverture à Habitat
+     * @param view
+     */
     public void addOuverture(View view) {
         Intent intent = new Intent(this, CreationOuvertureActivity.class);
         intent.putExtra("Habitat", habitat);

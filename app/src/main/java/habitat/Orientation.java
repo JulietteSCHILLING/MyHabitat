@@ -6,6 +6,9 @@ public enum Orientation {
     SUD,
     OUEST;
 
+    /**
+     * Constructeur vide d'Orientation
+     */
     Orientation() {
     }
 }

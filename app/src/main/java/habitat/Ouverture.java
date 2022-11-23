@@ -11,11 +11,27 @@ import java.util.Objects;
 
 public class Ouverture implements Parcelable {
 
+    /**
+     * Attribut stockant le mur de depart de l'ouverture
+     */
     private Mur murDepart;
+    /**
+     * Attribut stockant le mur d'arrivee de l'ouverture
+     */
     private Mur murArrivee;
+    /**
+     * Attribut stockant le rectangle de depart de l'ouverture
+     */
     private Rect rectDepart;
+    /**
+     * Attribut stockant le rectangle d'arrivee de l'ouverture
+     */
     private Rect rectArrivee;
 
+    /**
+     * Constructeur de Ouverture a partir du JSON
+     * @param jsonObject
+     */
     public Ouverture(JSONObject jsonObject) {
         try {
             murDepart = new Mur((JSONObject) jsonObject.get("MurDepart"));
@@ -29,6 +45,13 @@ public class Ouverture implements Parcelable {
         }
     }
 
+    /**
+     * Constructeur d'Ouverture avec les 2 murs et les 2 rectangles associes
+     * @param murDepart
+     * @param murArrivee
+     * @param rectDepart
+     * @param rectArrivee
+     */
     public Ouverture(Mur murDepart, Mur murArrivee, Rect rectDepart, Rect rectArrivee){
         this.murDepart = murDepart;
         this.murArrivee = murArrivee;
@@ -36,6 +59,10 @@ public class Ouverture implements Parcelable {
         this.rectArrivee = rectArrivee;
     }
 
+    /**
+     * Constructeur d'Ouverture pour Parcelable
+     * @param in
+     */
     protected Ouverture(Parcel in){
         murDepart = in.readParcelable(Mur.class.getClassLoader());
         murArrivee = in.readParcelable(Mur.class.getClassLoader());
@@ -43,6 +70,9 @@ public class Ouverture implements Parcelable {
         rectArrivee = in.readParcelable(Rect.class.getClassLoader());
     }
 
+    /**
+     * Creator d'Ouverture pour Parcelable
+     */
     public static final Creator<Ouverture> CREATOR = new Creator<Ouverture>() {
         @Override
         public Ouverture createFromParcel(Parcel in) {
@@ -55,6 +85,10 @@ public class Ouverture implements Parcelable {
         }
     };
 
+    /**
+     * Fonction qui genere le JSON d'Ouverture
+     * @return le JSON d'Ouverture
+     */
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArrayD = new JSONArray();
@@ -78,15 +112,24 @@ public class Ouverture implements Parcelable {
             throw new RuntimeException(e);
         }
 
-
         return jsonObject;
     }
 
+    /**
+     * Fonction utile pour Parcelable
+     * @return 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * Fonction qui ecrit Ouverture pour Parcelable
+     * @param dest The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(murDepart, flags);
@@ -95,6 +138,75 @@ public class Ouverture implements Parcelable {
         dest.writeParcelable(rectArrivee, flags);
     }
 
+    /**
+     * getter du mur de depart
+     * @return le mur de depart de l'ouverture
+     */
+    public Mur getMurDepart() {
+        return murDepart;
+    }
+
+    /**
+     * setter du mur de depart
+     * @param murDepart
+     */
+    public void setMurDepart(Mur murDepart) {
+        this.murDepart = murDepart;
+    }
+
+    /**
+     * getter du mur d'arrivee
+     * @return le mur d'arrivee de l'ouverture
+     */
+    public Mur getMurArrivee() {
+        return murArrivee;
+    }
+
+    /**
+     * setter du mur d'arrivee
+     * @param murArrivee
+     */
+    public void setMurArrivee(Mur murArrivee) {
+        this.murArrivee = murArrivee;
+    }
+
+    /**
+     * getter du rectangle de depart
+     * @return le rectangle de depart de l'ouverture
+     */
+    public Rect getRectDepart() {
+        return rectDepart;
+    }
+
+    /**
+     * setter du rectangle de depart
+     * @param rectDepart
+     */
+    public void setRectDepart(Rect rectDepart) {
+        this.rectDepart = rectDepart;
+    }
+
+    /**
+     * getter du rectangle d'arrivee
+     * @return le rectangle d'arrivee
+     */
+    public Rect getRectArrivee() {
+        return rectArrivee;
+    }
+
+    /**
+     * setter du rectangle d'arrivee
+     * @param rectArrivee
+     */
+    public void setRectArrivee(Rect rectArrivee) {
+        this.rectArrivee = rectArrivee;
+    }
+
+    /**
+     * Fonction equals de Ouverture
+     * @param o
+     * @return true si egaux, false sinon
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,43 +214,19 @@ public class Ouverture implements Parcelable {
         return Objects.equals(murDepart, ((Ouverture) o).getMurDepart()) && Objects.equals(murArrivee, ((Ouverture) o).getMurArrivee()) && Objects.equals(rectDepart, ((Ouverture) o).getRectDepart()) && Objects.equals(rectArrivee, ((Ouverture) o).getRectArrivee());
     }
 
+    /**
+     * Retourne le hashCode de Ouverture
+     * @return le hashCode de Ouverure
+     */
     @Override
     public int hashCode() {
         return Objects.hash(murDepart, murArrivee, rectDepart, rectArrivee);
     }
 
-    public Mur getMurDepart() {
-        return murDepart;
-    }
-
-    public void setMurDepart(Mur murDepart) {
-        this.murDepart = murDepart;
-    }
-
-    public Mur getMurArrivee() {
-        return murArrivee;
-    }
-
-    public void setMurArrivee(Mur murArrivee) {
-        this.murArrivee = murArrivee;
-    }
-
-    public Rect getRectDepart() {
-        return rectDepart;
-    }
-
-    public void setRectDepart(Rect rectDepart) {
-        this.rectDepart = rectDepart;
-    }
-
-    public Rect getRectArrivee() {
-        return rectArrivee;
-    }
-
-    public void setRectArrivee(Rect rectArrivee) {
-        this.rectArrivee = rectArrivee;
-    }
-
+    /**
+     * Fonction toString d'ouverture
+     * @return le toString d'Ouverture
+     */
     @Override
     public String toString() {
         return "Ouverture{" +

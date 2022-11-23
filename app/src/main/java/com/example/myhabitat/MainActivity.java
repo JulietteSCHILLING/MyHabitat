@@ -5,14 +5,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.Habitat;
-import habitat.Mur;
 import habitat.Ouverture;
 import habitat.Piece;
 import org.json.JSONArray;
@@ -25,39 +20,18 @@ public class MainActivity extends AppCompatActivity {
 
     private Habitat habitat;
     private TextView textView;
-    private ActivityResultLauncher<Intent> launcher;
 
+    /**
+     * onCreate de MainActivity
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /*
-        launcher = registerForActivityResult(
-                // Contrat qui détermine le type de l'interaction
-                new ActivityResultContracts.StartActivityForResult(),
-                // Callback appelé lorsque le résultat sera disponible
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        //On récupère les données de habitat
-                        Intent intent = result.getData();
-                        if(intent != null) {
-                            Bundle extras = intent.getExtras();
-                            habitat = (Habitat) extras.get("Habitat");
-                            habitat.setCorrectly();
-                            ouvrirJSON();
-                            textView.setText(habitat.toJSON().toString());
-
-                        }
-
-                    }
-                }
-        );
-
-         */
-
-
 
         textView = findViewById(R.id.textTest);
 
@@ -74,30 +48,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Permet de lancer l'activite de conception
+     * @param view
+     */
     public void conception(View view) {
         Intent intent = new Intent(this, ModeConceptionActivity.class);
         intent.putExtra("Habitat", habitat);
         startActivity(intent);
-        /*
-        if (intent.resolveActivity(getPackageManager()) != null){
-            launcher.launch(intent);
-        }
-
-         */
     }
 
+    /**
+     * Permet de lancer l'activite d'immersion
+     * @param view
+     */
     public void immersion(View view) {
         Intent intent = new Intent(this, ModeImmersionActivity.class);
         intent.putExtra("Habitat", habitat);
         startActivity(intent);
-        /*
-        if (intent.resolveActivity(getPackageManager()) != null){
-            launcher.launch(intent);
-        }
-
-         */
     }
 
+    /**
+     * Permet de recuperer l'habitat enregistre
+     */
     public void ouvrirJSON(){
         habitat = new Habitat();
         FileInputStream fis = null;
@@ -136,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(habitat.toString());
     }
 
+    /**
+     * Fonction permettant de recuperer le texte dans un texte
+     * @param fis
+     * @return
+     */
     public String getFileContent(FileInputStream fis) {
         StringBuilder sb = new StringBuilder();
         Reader r = null;
@@ -154,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    /**
+     * Fonction de 1er demarrage de l'activite
+     */
     @Override
     protected void onPostResume() {
         ouvrirJSON();
