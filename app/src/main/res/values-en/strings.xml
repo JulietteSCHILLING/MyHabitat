@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyHabitat</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">large_text</string>
+    <string name="action_settings">Settings</string>
+    <string name="direction">Direction</string>
+    <string name="piecededepart">Starting Room</string>
+    <string name="piecedarrivee">Ending Room</string>
+    <string name="selectionner">Select</string>
+    <string name="confirmer">Submit</string>
+    <string name="modeconception">Design Mode</string>
+    <string name="modeimmersion">Immersive Mode</string>
+    <string name="ajouteruneouverture">Add an opening</string>
+    <string name="ajouterunepiece">Add a room</string>
+</resources>

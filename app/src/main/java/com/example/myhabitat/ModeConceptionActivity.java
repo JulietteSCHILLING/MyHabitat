@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
@@ -121,11 +122,10 @@ public class ModeConceptionActivity extends AppCompatActivity {
             ll.addView(editText);
             for(Mur mur : piece.getMurs()){
                 LinearLayout llMur = new LinearLayout(this);
-                llMur.setOrientation(LinearLayout.HORIZONTAL);
+                //llMur.setGravity(Gravity.CENTER_HORIZONTAL);
                 ImageButton imageButton = new ImageButton(this);
                 imageButton.setMaxHeight(50);
                 imageButton.setMaxWidth(50);
-                //imageButton.setImageBitmap(mur.getPhoto());
 
                 //On récupère la photo
                 FileInputStream fis = null;

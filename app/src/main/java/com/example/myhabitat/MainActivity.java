@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ouvrirJSON(){
-        //habitat.reset();
         habitat = new Habitat();
         FileInputStream fis = null;
         try {

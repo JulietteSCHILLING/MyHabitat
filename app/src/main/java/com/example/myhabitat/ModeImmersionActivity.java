@@ -185,6 +185,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
             try {
                 canvas = surfaceView.getHolder().lockCanvas();
                 synchronized (surfaceView.getHolder()) {
+                    canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                     for(Rect rect : rectangles){
                         canvas.drawRect(rect, myPaint);
                     }

@@ -26,7 +26,7 @@
     </ScrollView>
 
     <Button
-            android:text="Confirmer"
+            android:text="@string/confirmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button"
@@ -37,7 +37,7 @@
             />
 
     <Button
-            android:text="Ajouter une ouverture"
+            android:text="@string/ajouteruneouverture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button2"
@@ -48,7 +48,7 @@
             android:layout_marginTop="24dp"/>
 
     <Button
-            android:text="Ajouter une piece"
+            android:text="@string/ajouterunepiece"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/addPiece"

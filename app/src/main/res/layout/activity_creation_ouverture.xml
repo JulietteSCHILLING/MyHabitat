@@ -30,7 +30,7 @@
             app:layout_constraintHorizontal_bias="0.892"/>
 
     <TextView
-            android:text="Direction"
+            android:text="@string/direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView4"
@@ -41,7 +41,7 @@
             app:layout_constraintHorizontal_bias="0.83"/>
 
     <TextView
-            android:text="Piece de Depart"
+            android:text="@string/piecededepart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewDepart"
@@ -53,7 +53,7 @@
             app:layout_constraintVertical_bias="0.484"/>
 
     <TextView
-            android:text="Piece d'Arrivee"
+            android:text="@string/piecedarrivee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewArrivee"
@@ -85,7 +85,7 @@
             app:layout_constraintHorizontal_bias="1.0"/>
 
     <TextView
-            android:text="Direction"
+            android:text="@string/direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
@@ -116,7 +116,7 @@
             app:layout_constraintHorizontal_bias="0.0"/>
 
     <Button
-            android:text="Selectionner"
+            android:text="@string/selectionner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonSDepart"
@@ -128,7 +128,7 @@
             app:layout_constraintHorizontal_bias="0.419"/>
 
     <Button
-            android:text="Selectionner"
+            android:text="@string/selectionner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonSArrivee"
@@ -139,7 +139,7 @@
             android:layout_marginTop="16dp"/>
 
     <Button
-            android:text="Confirmer"
+            android:text="@string/confirmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonConfirmer"
