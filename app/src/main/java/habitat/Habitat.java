@@ -1,15 +1,11 @@
 package habitat;
 
-import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import outils.FabriqueId;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Habitat implements Parcelable {

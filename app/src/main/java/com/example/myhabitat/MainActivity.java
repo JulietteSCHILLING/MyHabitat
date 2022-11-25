@@ -33,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textTest);
+        //textView = findViewById(R.id.textTest);
 
         ouvrirJSON();
 
-        textView.setText(habitat.toString());
+        //textView.setText(habitat.toString());
 
         Button b = findViewById(R.id.buttonImmersion);
         if(habitat.getPieces().size() == 0) {
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Log.i("testJSON", "pbm ouverture");
         }
-        textView.setText(habitat.toString());
+        //textView.setText(habitat.toString());
     }
 
     /**

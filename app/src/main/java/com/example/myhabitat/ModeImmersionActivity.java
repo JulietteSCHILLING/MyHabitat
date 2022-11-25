@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ModeImmersionActivity extends AppCompatActivity implements SensorEventListener {
-    Habitat habitat;
-    Mur murEnCours;
-    Piece pieceEnCours;
-    TextView textViewPiece;
+    private Habitat habitat;
+    private Mur murEnCours;
+    private Piece pieceEnCours;
+    private TextView textViewPiece;
     private SensorManager sensorManager;
     private ImageView imageViewBoussole;
     private float debut = 0;
