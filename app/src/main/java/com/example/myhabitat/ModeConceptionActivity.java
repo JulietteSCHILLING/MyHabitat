@@ -22,6 +22,9 @@ import org.json.JSONObject;
 import outils.GestionnaireEditHabitat;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ModeConceptionActivity extends AppCompatActivity {
     private Habitat habitat;
@@ -87,6 +90,13 @@ public class ModeConceptionActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
+                                //On récupère la date de prise de la photo
+                                Calendar calendar = Calendar.getInstance();
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                String date = simpleDateFormat.format(calendar.getTime());
+                                murAssocie.setDate(date);
+                                Toast.makeText(getBaseContext(), murAssocie.getDate(), Toast.LENGTH_SHORT).show();
+                                Log.i("testDateJSON", habitat.toJSON().toString());
                             }
                             affichePieces();
                         }
@@ -240,6 +250,7 @@ public class ModeConceptionActivity extends AppCompatActivity {
      * @param view
      */
     public void confirmer(View view) {
+        enregistrement();
         finish();
     }
 

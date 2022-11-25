@@ -25,6 +25,8 @@ public class Mur implements Parcelable {
      */
     private int id;
 
+    private String date = "dd/MM/yyyy";;
+
     /**
      * Constructeur de Mur avec la piece et l'orientation associes
      * @param piece
@@ -61,6 +63,7 @@ public class Mur implements Parcelable {
                     orientation = Orientation.SUD; //Par défaut
                     break;
             }
+            date = (String) jsonObjectMur.get("Date");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -74,6 +77,7 @@ public class Mur implements Parcelable {
         orientation = (Orientation) in.readSerializable();
         id = in.readInt();
         piece = new Piece("");
+        date = in.readString();
     }
 
     /**
@@ -139,6 +143,14 @@ public class Mur implements Parcelable {
         this.id = id;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     /**
      * Fonction toString du mur
      * @return le toString du mur
@@ -173,6 +185,7 @@ public class Mur implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(orientation);
         dest.writeInt(id);
+        dest.writeString(date);
     }
 
     /**
@@ -184,6 +197,7 @@ public class Mur implements Parcelable {
         try {
             jsonObject.put("Orientation", orientation);
             jsonObject.put("Id", id);
+            jsonObject.put("Date", date);
 
         } catch (JSONException e) {
             throw new RuntimeException(e);

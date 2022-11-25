@@ -97,8 +97,8 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
                     }
                 }
                 if(res && r!=null){
-                    Log.i("testTouchRect", "je touche rect="+r.toString());
-                    Log.i("testHM", pieceArriveeRect+"");
+                    //Log.i("testTouchRect", "je touche rect="+r.toString());
+                    //Log.i("testHM", pieceArriveeRect+"");
                     pieceEnCours = pieceArriveeRect.get(r);
                     afficheMur();
                 }
@@ -122,8 +122,6 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
             menu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    Log.i("testImmersion", "J'ouvre " + item.getTitle());
-                    Toast.makeText(getBaseContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
                     affichePiece(piece);
                     return false;
                 }
@@ -151,7 +149,8 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
      */
     public void afficheMur(){
         textViewPiece = findViewById(R.id.textViewPiece);
-        textViewPiece.setText("piece="+pieceEnCours.getNom());
+        textViewPiece.setTextSize(25);
+        textViewPiece.setText(pieceEnCours.getNom());
         //On récupère la photo
         FileInputStream fis = null;
         try {
@@ -166,6 +165,10 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
             //Log.i("testDrawable", "pas de photo");
             imageViewMur.setImageDrawable(getDrawable(R.drawable.imagemur));
         }
+        //Log.i("testDate", murEnCours.getDate()+"test");
+        TextView textViewDate = findViewById(R.id.textViewDate);
+        textViewDate.setText(murEnCours.getDate());
+
         afficheOuvertures();
     }
 
@@ -175,7 +178,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
      */
     public void afficheOuvertures(){
         ArrayList<Ouverture> ouvertures = habitat.getOuvertureDeMur(murEnCours);
-        Log.i("testOuvertures", ouvertures+"");
+        //Log.i("testOuvertures", ouvertures+"");
         rectangles.clear();
         pieceArriveeRect.clear();
 
@@ -198,7 +201,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
                 //Si mur de depart
                 if (murEnCours.getId() == ouverture.getMurDepart().getId()) {
                     rectangles.add(ouverture.getRectDepart());
-                    Log.i("testGetPiece", ouverture.getMurArrivee()+"");
+                    //Log.i("testGetPiece", ouverture.getMurArrivee()+"");
                     pieceArriveeRect.put(ouverture.getRectDepart(), ouverture.getMurArrivee().getPiece());
                 } else {
                     //Si mur d'arrivee
@@ -233,7 +236,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     public void onSensorChanged(SensorEvent event) {
 
         // On récupère l'angle
-        float angle = -(Math.round(event.values[0]));
+        float angle = -(Math.round(event.values[0]))-50;
 
         //On créé l'animation de rotation
         RotateAnimation rotateAnimation = new RotateAnimation(debut, angle, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
