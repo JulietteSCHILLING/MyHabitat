@@ -76,7 +76,7 @@ public class ModeConceptionActivity extends AppCompatActivity {
                             Bitmap photoBitmap = (Bitmap) extras.get("data");
 
                             //On vérifie que la photo a bien été prise
-                            Log.i("testPhotoBitmap", "hauteur de l'image : " + photoBitmap.getHeight());
+                            //Log.i("testPhotoBitmap", "hauteur de l'image : " + photoBitmap.getHeight());
 
                             Mur murAssocie = gestionnaire.getMur(photoEnCours);
                             if(murAssocie != null){
@@ -97,8 +97,14 @@ public class ModeConceptionActivity extends AppCompatActivity {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                                 String date = simpleDateFormat.format(calendar.getTime());
                                 murAssocie.setDate(date);
-                                Toast.makeText(getBaseContext(), murAssocie.getDate(), Toast.LENGTH_SHORT).show();
-                                Log.i("testDateJSON", habitat.toJSON().toString());
+                                for(Piece piece :habitat.getPieces()){
+                                    for(Mur mur : piece.getMurs()){
+                                        if(mur.equals(murAssocie)){
+                                            mur.setDate(date);
+                                        }
+                                    }
+                                }
+                                majHabitat();
                             }
                             affichePieces();
                         }

@@ -41,6 +41,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     private Piece goToPiece;
     private Rect goToRect;
     private GrapheHabitat grapheHabitat;
+    private ImageView imageViewFleche;
 
     /**
      * onCreate de ModeImmersionActivity
@@ -66,6 +67,8 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         setContentView(R.layout.activity_mode_immersion);
 
         grapheHabitat = new GrapheHabitat(habitat);
+        imageViewFleche = findViewById(R.id.imageViewFleche);
+        imageViewFleche.setVisibility(View.INVISIBLE);
 
         rectangles = new ArrayList<Rect>();
         pieceArriveeRect = new HashMap<Rect, Piece>();
@@ -255,7 +258,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     public void onSensorChanged(SensorEvent event) {
 
         // On récupère l'angle
-        float angle = -(Math.round(event.values[0]))-60;
+        float angle = -(Math.round(event.values[0]));
 
         //On créé l'animation de rotation
         RotateAnimation rotateAnimation = new RotateAnimation(debut, angle, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -368,20 +371,97 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
             //On recupere la prochaine piece et le mur à partir duquel on y accede
             Piece pieceEnsuite = chemin.get(1);
 
+            //On recuperera la direction pour la fleche
+            Orientation orientation = null;
             for (Ouverture ouverture : habitat.getOuvertures()) {
                 Piece pieceDepart = ouverture.getMurDepart().getPiece();
                 Piece pieceArrivee = ouverture.getMurArrivee().getPiece();
                 Log.i("testGraphe", "pieceDepart = " + pieceDepart.getNom() + " pieceArrivee = " + pieceArrivee.getNom() + " pieceEnCours = " + pieceEnCours.getNom() + " pieceEnsuite = " + pieceEnsuite.getNom());
                 if (pieceDepart.equals(pieceEnCours) && pieceArrivee.equals(pieceEnsuite)) {
                     goToRect = ouverture.getRectDepart();
+                    orientation = ouverture.getMurDepart().getOrientation();
                 } else if (pieceArrivee.equals(pieceEnCours) && pieceDepart.equals(pieceEnsuite)) {
                     goToRect = ouverture.getRectArrivee();
+                    orientation = ouverture.getMurArrivee().getOrientation();
                 }
             }
             afficheOuvertures();
+
+            //Log.i("testFleche", orientation.toString());
+            imageViewFleche.setVisibility(View.VISIBLE);
+            imageViewFleche.animate().cancel();
+            switch (orientation){
+                case EST:
+                    switch(murEnCours.getOrientation()){
+                        case OUEST:
+                            imageViewFleche.animate().rotation(180);
+                            break;
+                        case SUD:
+                            imageViewFleche.animate().rotation(-90);
+                            break;
+                        case NORD:
+                            imageViewFleche.animate().rotation(90);
+                            break;
+                        default:
+                            imageViewFleche.animate().rotation(0);
+                            break;
+                    }
+                    break;
+                case OUEST:
+                    switch(murEnCours.getOrientation()){
+                        case EST:
+                            imageViewFleche.animate().rotation(180);
+                            break;
+                        case SUD:
+                            imageViewFleche.animate().rotation(90);
+                            break;
+                        case NORD:
+                            imageViewFleche.animate().rotation(-90);
+                            break;
+                        default:
+                            imageViewFleche.animate().rotation(0);
+                            break;
+                    }
+                    break;
+                case SUD:
+                    switch(murEnCours.getOrientation()){
+                        case EST:
+                            imageViewFleche.animate().rotation(90);
+                            break;
+                        case OUEST:
+                            imageViewFleche.animate().rotation(-90);
+                            break;
+                        case NORD:
+                            imageViewFleche.animate().rotation(180);
+                            break;
+                        default:
+                            imageViewFleche.animate().rotation(0);
+                            break;
+                    }
+                    break;
+                case NORD:
+                    switch(murEnCours.getOrientation()){
+                        case EST:
+                            imageViewFleche.animate().rotation(-90);
+                            break;
+                        case OUEST:
+                            imageViewFleche.animate().rotation(90);
+                            break;
+                        case SUD:
+                            imageViewFleche.animate().rotation(180);
+                            break;
+                        default:
+                            imageViewFleche.animate().rotation(0);
+                            break;
+                    }
+                    break;
+            }
+
         }else{
             goToRect = null;
             goToPiece = null;
+            imageViewFleche.setVisibility(View.INVISIBLE);
+            Toast.makeText(getBaseContext(), "Vous êtes arrivé !", Toast.LENGTH_SHORT).show();
         }
     }
 }

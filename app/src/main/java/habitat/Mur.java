@@ -205,16 +205,12 @@ public class Mur implements Parcelable {
         return jsonObject;
     }
 
-    /**
-     * Fonction equals du mur
-     * @param o
-     * @return true si egaux, false sinon
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return id == ((Mur) o).getId() && Objects.equals(piece, ((Mur) o).getPiece()) && orientation == ((Mur) o).getOrientation();
+        Mur mur = (Mur) o;
+        return id == mur.id;
     }
 
     /**

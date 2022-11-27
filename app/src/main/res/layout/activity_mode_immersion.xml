@@ -29,7 +29,9 @@
             android:layout_marginTop="52dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="117dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageViewMur"/>
+            app:layout_constraintBottom_toTopOf="@+id/imageViewMur"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintVertical_bias="0.617"/>
 
     <SurfaceView
             android:layout_width="414dp"
@@ -75,4 +77,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+            android:layout_width="59dp"
+            android:layout_height="51dp"
+            app:srcCompat="@android:drawable/arrow_up_float"
+            android:id="@+id/imageViewFleche"
+            app:layout_constraintTop_toTopOf="@+id/imageViewMur"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
