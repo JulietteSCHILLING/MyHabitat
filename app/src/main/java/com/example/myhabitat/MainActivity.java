@@ -13,6 +13,7 @@ import habitat.Piece;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import outils.GrapheHabitat;
 
 import java.io.*;
 
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ouvrirJSON();
+
+        //Graphe graphe = new Graphe(habitat);
+        GrapheHabitat grapheHabitat = new GrapheHabitat(habitat);
+
 
         Button b = findViewById(R.id.buttonImmersion);
         if(habitat.getPieces().size() == 0) {

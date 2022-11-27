@@ -316,6 +316,8 @@ public class CreationOuvertureActivity extends AppCompatActivity{
         Ouverture ouverture = new Ouverture(pieceDepart.getMurOrientation(orientationPieceDepart), pieceArrivee.getMurOrientation(orientationPieceArrivee), rectDepart, rectArrivee);
         habitat.addOuverture(ouverture);
 
+        Log.i("testECrea", habitat.getOuvertures().toString());
+
         Toast.makeText(getBaseContext(), "Ouverture créée !", Toast.LENGTH_SHORT).show();
 
         enregistrement();

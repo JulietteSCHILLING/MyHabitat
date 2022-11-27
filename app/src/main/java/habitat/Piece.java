@@ -219,6 +219,6 @@ public class Piece implements Parcelable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(nom, murs);
+        return Objects.hash(nom);
     }
 }

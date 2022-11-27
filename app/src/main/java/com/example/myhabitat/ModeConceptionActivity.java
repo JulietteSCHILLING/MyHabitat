@@ -18,6 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.*;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import outils.GestionnaireEditHabitat;
 
@@ -67,7 +69,7 @@ public class ModeConceptionActivity extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        //On récupère les données de habitat
+                        //On récupère les données de la photo
                         Intent intent = result.getData();
                         if(intent != null) {
                             Bundle extras = intent.getExtras();
@@ -104,6 +106,17 @@ public class ModeConceptionActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i("testOnStart", "je vais dans le OnStart");
+        Log.i("testEConception", habitat.getOuvertures().toString());
+        //On recupere habitat quand on revient de CreationOuvertureActivity
+        ouvrirJSON();
+        Log.i("testEConception", habitat.getOuvertures().toString());
+
+        super.onStart();
     }
 
     /**
@@ -262,5 +275,70 @@ public class ModeConceptionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreationOuvertureActivity.class);
         intent.putExtra("Habitat", habitat);
         startActivity(intent);
+    }
+
+
+    /**
+     * Permet de recuperer l'habitat enregistre
+     */
+    public void ouvrirJSON(){
+        habitat = new Habitat();
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("enregistrement.json");
+        } catch (FileNotFoundException e) {
+            //throw new RuntimeException(e);
+        }
+        if (fis != null) {
+            String json = getFileContent(fis);
+
+            try {
+                JSONObject enregistrement = new JSONObject(json);
+                JSONArray pieces = enregistrement.getJSONArray("Pieces");
+                for(int i=0; i<pieces.length(); i++){
+                    JSONObject Jpiece = (JSONObject) pieces.get(i);
+                    Piece piece = new Piece(Jpiece);
+                    habitat.addPiece(piece);
+                }
+                JSONArray ouvertures = enregistrement.getJSONArray("Ouvertures");
+                for(int i=0; i<ouvertures.length(); i++){
+                    JSONObject Jouverture = (JSONObject) ouvertures.get(i);
+                    Ouverture ouverture = new Ouverture(Jouverture);
+                    habitat.addOuverture(ouverture);
+                }
+                Log.i("testJSONouverture", habitat.toString());
+
+            } catch (JSONException e) {
+                //throw new RuntimeException(e);
+            }
+
+            Log.i("testJSON", json);
+        }else{
+            Log.i("testJSON", "pbm ouverture");
+        }
+        //textView.setText(habitat.toString());
+    }
+
+    /**
+     * Fonction permettant de recuperer le texte dans un texte
+     * @param fis
+     * @return
+     */
+    public String getFileContent(FileInputStream fis) {
+        StringBuilder sb = new StringBuilder();
+        Reader r = null;
+        try {
+            r = new InputStreamReader(fis, "UTF-8");
+            int ch = r.read();
+            while(ch >= 0) {
+                sb.append((char)ch);
+                ch = r.read();
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb.toString();
     }
 }
