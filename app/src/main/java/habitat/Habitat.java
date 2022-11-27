@@ -76,6 +76,18 @@ public class Habitat implements Parcelable {
      * @return les ouvertures
      */
     public ArrayList<Ouverture> getOuvertures() {
+        for(Ouverture ouverture : ouvertures) {
+            for (Piece piece : pieces) {
+                for (Mur mur1 : piece.getMurs()) {
+                    if (ouverture.getMurDepart().getId() == mur1.getId()) {
+                        ouverture.setMurDepart(mur1);
+                    }
+                    if (ouverture.getMurArrivee().getId() == mur1.getId()) {
+                        ouverture.setMurArrivee(mur1);
+                    }
+                }
+            }
+        }
         return ouvertures;
     }
 

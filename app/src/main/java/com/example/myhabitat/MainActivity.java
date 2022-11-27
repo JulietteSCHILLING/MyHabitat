@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         ouvrirJSON();
 
         //Graphe graphe = new Graphe(habitat);
-        GrapheHabitat grapheHabitat = new GrapheHabitat(habitat);
+        //GrapheHabitat grapheHabitat = new GrapheHabitat(habitat);
 
 
         Button b = findViewById(R.id.buttonImmersion);

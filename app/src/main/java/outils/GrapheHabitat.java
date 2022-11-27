@@ -71,6 +71,7 @@ public class GrapheHabitat {
         for(Piece piece : habitat.getPieces()){
             hmap.put(i, piece);
             hmapGet.put(piece, i);
+            Log.i("testGraphe", "je mets " + piece.getNom());
             i++;
 
             res.put(piece, new HashMap<>());
@@ -89,6 +90,7 @@ public class GrapheHabitat {
         //On créé la list à partir des ouvertures
         List<Edge> edges = new ArrayList<>();
         for(Ouverture ouverture : habitat.getOuvertures()){
+            Log.i("testGraphe", "je veux " + ouverture.getMurDepart().getPiece() + " et " + ouverture.getMurArrivee().getPiece());
             edges.add(new Edge(hmapGet.get(ouverture.getMurDepart().getPiece()), hmapGet.get(ouverture.getMurArrivee().getPiece()), 1));
             edges.add(new Edge(hmapGet.get(ouverture.getMurArrivee().getPiece()), hmapGet.get(ouverture.getMurDepart().getPiece()), 1));
         }
@@ -199,8 +201,9 @@ public class GrapheHabitat {
     }
 
 
-    public void getPlusCourtChemin(Piece pieceDepart, Piece pieceArrivee){
+    public ArrayList<Piece> getPlusCourtChemin(Piece pieceDepart, Piece pieceArrivee){
         Log.i("testGraphe", "Path (" + pieceDepart.getNom() + " -> " + pieceArrivee.getNom() + ", Route = " + res.get(pieceDepart).get(pieceArrivee));
+        return res.get(pieceDepart).get(pieceArrivee);
     }
 
 }

@@ -13,4 +13,6 @@
     <string name="modeimmersion">Immersive Mode</string>
     <string name="ajouteruneouverture">Add an opening</string>
     <string name="ajouterunepiece">Add a room</string>
+    <string name="textview">TextView</string>
+    <string name="alleraunepiece">Go to a room</string>
 </resources>

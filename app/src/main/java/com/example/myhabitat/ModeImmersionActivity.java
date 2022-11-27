@@ -1,6 +1,7 @@
 package com.example.myhabitat;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
 import android.hardware.Sensor;
@@ -11,12 +12,12 @@ import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import habitat.*;
+import outils.GrapheHabitat;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +38,9 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     private Canvas canvas;
     private ArrayList<Rect> rectangles;
     private HashMap<Rect, Piece> pieceArriveeRect;
+    private Piece goToPiece;
+    private Rect goToRect;
+    private GrapheHabitat grapheHabitat;
 
     /**
      * onCreate de ModeImmersionActivity
@@ -61,6 +65,8 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
         setContentView(R.layout.activity_mode_immersion);
 
+        grapheHabitat = new GrapheHabitat(habitat);
+
         rectangles = new ArrayList<Rect>();
         pieceArriveeRect = new HashMap<Rect, Piece>();
 
@@ -79,7 +85,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
 
         myPaint = new Paint();
         myPaint.setStrokeWidth(5);
-        myPaint.setColor(Color.RED);
+        myPaint.setColor(Color.BLUE);
         myPaint.setStyle(Paint.Style.STROKE);
 
 
@@ -169,6 +175,11 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
         TextView textViewDate = findViewById(R.id.textViewDate);
         textViewDate.setText(murEnCours.getDate());
 
+        //On met à jour la piece suivante si mode "aller a une piece"
+        if(goToPiece != null){
+            goTo();
+        }
+
         afficheOuvertures();
     }
 
@@ -214,7 +225,15 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
                 synchronized (surfaceView.getHolder()) {
                     canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                     for(Rect rect : rectangles){
-                        canvas.drawRect(rect, myPaint);
+                        if(rect.equals(goToRect)){
+                            Paint newPaint = new Paint();
+                            newPaint.setStrokeWidth(5);
+                            newPaint.setColor(Color.RED);
+                            newPaint.setStyle(Paint.Style.STROKE);
+                            canvas.drawRect(rect, newPaint);
+                        }else {
+                            canvas.drawRect(rect, myPaint);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -236,7 +255,7 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     public void onSensorChanged(SensorEvent event) {
 
         // On récupère l'angle
-        float angle = -(Math.round(event.values[0]))-50;
+        float angle = -(Math.round(event.values[0]))-60;
 
         //On créé l'animation de rotation
         RotateAnimation rotateAnimation = new RotateAnimation(debut, angle, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -307,5 +326,62 @@ public class ModeImmersionActivity extends AppCompatActivity implements SensorEv
     protected void onResume() {
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
         super.onResume();
+    }
+
+    public void goTo(View view) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModeImmersionActivity.this);
+        alertDialog.setTitle("Choisi une piece où aller");
+        Spinner spinner = new Spinner(ModeImmersionActivity.this);
+        String[] arrayPieces = new String[habitat.getPieces().size()];
+        for(int i=0; i<habitat.getPieces().size(); i++){
+            arrayPieces[i] = habitat.getPieces().get(i).getNom();
+        }
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayPieces);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                goToPiece = habitat.getPieces().get(position);
+                //Log.i("testGoTo", "je choisis la piece " + goTo.getNom());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        alertDialog.setView(spinner);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goTo();
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void goTo() {
+        if(!pieceEnCours.equals(goToPiece)) {
+            ArrayList<Piece> chemin = grapheHabitat.getPlusCourtChemin(pieceEnCours, goToPiece);
+
+            //On recupere la prochaine piece et le mur à partir duquel on y accede
+            Piece pieceEnsuite = chemin.get(1);
+
+            for (Ouverture ouverture : habitat.getOuvertures()) {
+                Piece pieceDepart = ouverture.getMurDepart().getPiece();
+                Piece pieceArrivee = ouverture.getMurArrivee().getPiece();
+                Log.i("testGraphe", "pieceDepart = " + pieceDepart.getNom() + " pieceArrivee = " + pieceArrivee.getNom() + " pieceEnCours = " + pieceEnCours.getNom() + " pieceEnsuite = " + pieceEnsuite.getNom());
+                if (pieceDepart.equals(pieceEnCours) && pieceArrivee.equals(pieceEnsuite)) {
+                    goToRect = ouverture.getRectDepart();
+                } else if (pieceArrivee.equals(pieceEnCours) && pieceDepart.equals(pieceEnsuite)) {
+                    goToRect = ouverture.getRectArrivee();
+                }
+            }
+            afficheOuvertures();
+        }else{
+            goToRect = null;
+            goToPiece = null;
+        }
     }
 }

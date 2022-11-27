@@ -101,4 +101,5 @@
     <string name="ajouteruneouverture">Ajouter une ouverture</string>
     <string name="ajouterunepiece">Ajouter une piece</string>
     <string name="textview">TextView</string>
+    <string name="alleraunepiece">aller a une piece</string>
 </resources>
